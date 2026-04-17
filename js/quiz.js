@@ -222,7 +222,6 @@ function renderGrid() {
     cell.className = `kana-cell srs-${level}${inDeck ? '' : ' not-in-deck'}`;
     cell.textContent = ch;
     cell.title = `${it.romaji} — ${level}${card && card.dueDate ? ' (due: ' + card.dueDate + ')' : ''}`;
-    cell.addEventListener('click', () => speakText(ch));
     $grid.appendChild(cell);
   }
 }
