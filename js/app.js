@@ -21,11 +21,11 @@ function initTheme() {
   const isDark = saved ? saved === 'dark' : prefersDark;
   applyTheme(isDark);
 
-  toggle.onclick = () => {
-    const nowDark = !document.documentElement.classList.contains('dark');
+  toggle.addEventListener('change', () => {
+    const nowDark = toggle.checked;
     applyTheme(nowDark);
     localStorage.setItem('km_theme', nowDark ? 'dark' : 'light');
-  };
+  });
 
   // Listen for system theme changes (with Safari < 14 fallback)
   const mq = window.matchMedia('(prefers-color-scheme: dark)');
@@ -38,9 +38,11 @@ function applyTheme(dark) {
   document.documentElement.classList.toggle('dark', dark);
   const toggle = document.getElementById('themeToggle');
   if (toggle) {
-    toggle.title = dark ? 'Switch to light mode' : 'Switch to dark mode';
-    toggle.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
-    toggle.setAttribute('aria-pressed', String(dark));
+    toggle.checked = dark;
+    toggle.setAttribute('aria-checked', String(dark));
+    // Update emoji: ☀️ for light, 🌙 for dark
+    const thumb = toggle.parentElement && toggle.parentElement.querySelector('.theme-switch-thumb');
+    if (thumb) thumb.textContent = dark ? '🌙' : '☀️';
   }
 }
 
