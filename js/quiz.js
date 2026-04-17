@@ -23,6 +23,10 @@ let srsCards = loadSRSCards();
 /** @type {{answer:string, romaji:string, choices:string[], item:object} | null} */
 let current = null;
 
+// ---- Timers ----
+let _toastTimer  = null;
+let _expandTimer = null;
+
 // ---- DOM refs (populated in init, after DOM is ready) ----
 let $tabH, $tabK, $prompt, $choices, $next, $speak;
 let $acc, $streak, $due, $reset, $lesson, $less5, $more5, $all;
@@ -83,6 +87,12 @@ function bindEvents() {
     limit = 5;
     saveLimit();
     current = null;
+    // Clear all milestone UI and pending timers
+    clearTimeout(_toastTimer); _toastTimer = null;
+    clearTimeout(_expandTimer); _expandTimer = null;
+    hideToast($toast50);
+    hideToast($toast75);
+    hideCelebrate();
     updateStatsUI();
     updateLessonUI();
     updateDueUI();
@@ -242,7 +252,6 @@ function speak() { if (!current) return; speakText(current.answer); }
 
 // ---- Deck expansion (keeps streak) ----
 // Delay newQuestion so user sees the answer feedback first
-let _expandTimer = null;
 function expandDeck() {
   if (limit >= ITEMS.length) return;
   limit = Math.min(ITEMS.length, limit + 5);
@@ -254,7 +263,6 @@ function expandDeck() {
 }
 
 // ---- Toast helpers ----
-let _toastTimer = null;
 function showToast(el, autoDismissMs) {
   if (!el) return;
   el.classList.add('show');
