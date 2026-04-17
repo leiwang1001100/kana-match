@@ -1,6 +1,9 @@
 # Kana Match 🎌
 
-A lightweight, offline-capable Japanese kana quiz app — no server, no dependencies, just a single HTML file.
+![Version](https://img.shields.io/badge/version-v0.2.0-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
+
+A lightweight, offline-capable Japanese kana quiz app — no server, no dependencies, just open `index.html`.
 
 **[▶ Play it live](https://leiwang1001100.github.io/kana-match/)**
 
@@ -84,7 +87,25 @@ All 46 base kana across 11 rows:
 - [ ] Reverse mode: Kana → Romaji
 - [ ] Typing mode
 - [ ] Vocabulary module
-- [ ] Spaced repetition (SRS)
+- [ ] Dark mode
+
+---
+
+## Changelog
+
+### v0.2.0 — 2026-04-17
+- ♻️ Refactored into modular files (`styles.css`, `js/data.js`, `js/srs.js`, `js/quiz.js`, `js/app.js`)
+- 🧠 Added **Spaced Repetition System (SM-2 algorithm)** — cards you miss come back sooner
+- 🟩 Progress grid now shows 4 SRS levels: New / Learning / Young / Mature
+- 📊 Stats bar now shows **Due** and **New** card counts
+- ✅ Expanded self-tests to cover SRS logic
+
+### v0.1.0 — 2026-04-17
+- 🎌 Initial release — 46 base kana quiz (Hiragana & Katakana)
+- Lesson limiter (+5 / −5 / All)
+- Accuracy & streak tracking with localStorage persistence
+- Progress grid, audio playback, celebration modal
+- Keyboard shortcuts (1–4, Space, H, K)
 
 ---
 
