@@ -123,15 +123,17 @@ function updateSeg() {
   $tabK.setAttribute('aria-selected', String(script === 'katakana'));
 }
 
-// Arc circumference for r=30: 2πr ≈ 188.5, but we use a 270° partial arc
-// Track dasharray = 188.5 * 0.75 = 141 visible, rest gap
-// Fill: pct of 141
-const ARC_TOTAL = 141; // 270° of circumference (r=30)
+// Arc circumference for r=30: 2πr ≈ 188.5
+// We show a 270° partial arc = 75% of circumference
+const ARC_R           = 30;
+const ARC_CIRCUMF     = Math.round(2 * Math.PI * ARC_R * 10) / 10; // 188.5
+const ARC_TRACK_LEN   = Math.round(ARC_CIRCUMF * 0.75);             // 141 (270°)
+const ARC_GAP         = ARC_CIRCUMF - ARC_TRACK_LEN;                // 47.5
 
 function setArc(arcEl, pct) {
   if (!arcEl) return;
-  const filled = pct === null ? 0 : Math.round((pct / 100) * ARC_TOTAL);
-  arcEl.style.strokeDasharray = filled + ' 188';
+  const filled = pct === null ? 0 : Math.round((pct / 100) * ARC_TRACK_LEN);
+  arcEl.style.strokeDasharray = `${filled} ${ARC_CIRCUMF}`;
 }
 
 function updateStatsUI() {
@@ -298,22 +300,35 @@ function hideCelebrate()  { $celebrate.classList.remove('show'); }
 
 // ---- Progress grid ----
 function renderGrid() {
-  $grid.innerHTML = '';
   const deck = new Set(ITEMS.slice(0, limit).map(x => x.romaji));
+  const existing = $grid.querySelectorAll('.kana-cell');
 
-  for (const it of ITEMS) {
-    const ch   = script === 'hiragana' ? it.hira : it.kata;
-    const card = srsCards[it.romaji];
-    const level = srsLevel(card);
+  // Full rebuild only if cell count doesn't match (first render or script switch)
+  if (existing.length !== ITEMS.length) {
+    $grid.innerHTML = '';
+    for (const it of ITEMS) {
+      const cell = document.createElement('div');
+      cell.dataset.romaji = it.romaji;
+      $grid.appendChild(cell);
+    }
+  }
+
+  // Update each cell in place (no DOM thrash)
+  const cells = $grid.querySelectorAll('.kana-cell, [data-romaji]');
+  ITEMS.forEach((it, i) => {
+    const cell  = cells[i];
+    if (!cell) return;
+    const ch     = script === 'hiragana' ? it.hira : it.kata;
+    const card   = srsCards[it.romaji];
+    const level  = srsLevel(card);
     const inDeck = deck.has(it.romaji);
+    const safeDate = card && card.dueDate && /^\d{4}-\d{2}-\d{2}$/.test(card.dueDate) ? card.dueDate : '';
 
-    const cell = document.createElement('div');
     cell.className = `kana-cell srs-${level}${inDeck ? '' : ' not-in-deck'}`;
     cell.textContent = ch;
-    const safeDate = card && card.dueDate && /^\d{4}-\d{2}-\d{2}$/.test(card.dueDate) ? card.dueDate : '';
     cell.title = `${it.romaji} — ${level}${safeDate ? ' (due: ' + safeDate + ')' : ''}`;
-    $grid.appendChild(cell);
-  }
+    cell.dataset.romaji = it.romaji;
+  });
 }
 
 // ---- Utilities ----
