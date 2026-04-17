@@ -1,9 +1,7 @@
-"use strict";
-
 // ============================
 // KANA DATA DEFINITIONS
 // ============================
-const ROWS = {
+var ROWS = {
   a:  ["a","i","u","e","o"],
   k:  ["ka","ki","ku","ke","ko"],
   s:  ["sa","shi","su","se","so"],
@@ -17,7 +15,7 @@ const ROWS = {
   nn: ["n"]
 };
 
-const HIRA = {
+var HIRA = {
   a:  ["あ","い","う","え","お"],
   k:  ["か","き","く","け","こ"],
   s:  ["さ","し","す","せ","そ"],
@@ -31,7 +29,7 @@ const HIRA = {
   nn: ["ん"]
 };
 
-const KATA = {
+var KATA = {
   a:  ["ア","イ","ウ","エ","オ"],
   k:  ["カ","キ","ク","ケ","コ"],
   s:  ["サ","シ","ス","セ","ソ"],
@@ -59,4 +57,4 @@ function buildItems() {
   return out;
 }
 
-const ITEMS = buildItems(); // 46 base kana
+var ITEMS = buildItems(); // 46 base kana
