@@ -4,8 +4,18 @@
 // QUIZ LOGIC & UI
 // ============================
 
+// ---- localStorage key constants ----
+const KEYS = {
+  script:     'km_script',
+  stats:      'km_stats',
+  limit:      'km_limit',
+  srs:        'km_srs_cards',
+  theme:      'km_theme',
+  milestones: 'km_milestones'
+};
+
 // ---- Persisted state ----
-let script   = localStorage.getItem('km_script') || 'hiragana';
+let script   = localStorage.getItem(KEYS.script) || 'hiragana';
 let stats    = loadStats();
 let limit    = loadLimit();
 let srsCards = loadSRSCards();
@@ -132,7 +142,7 @@ function updateStatsUI() {
   if (accVal) accVal.textContent = pct !== null ? `${pct}%` : '—';
   setArc(accArc, pct);
   // Streak chip
-  const streakVal = $streak.querySelector('.stat-chip__value');
+  const streakVal = $streak ? $streak.querySelector('.stat-chip__value') : null;
   if (streakVal) streakVal.textContent = String(stats.streak || 0);
 }
 
@@ -251,8 +261,8 @@ function hideToast(el) { if (el) el.classList.remove('show'); }
 
 // ---- Milestones ----
 // Track which milestones have fired per deck size
-function loadMilestones()  { try { return JSON.parse(localStorage.getItem('km_milestones') || '{}'); } catch { return {}; } }
-function saveMilestones(m) { try { localStorage.setItem('km_milestones', JSON.stringify(m)); } catch {} }
+function loadMilestones()  { try { return JSON.parse(localStorage.getItem(KEYS.milestones) || '{}'); } catch { return {}; } }
+function saveMilestones(m) { try { localStorage.setItem(KEYS.milestones, JSON.stringify(m)); } catch {} }
 let milestones = loadMilestones();
 
 function maybeMilestone() {
@@ -317,10 +327,10 @@ function shuffle(a) {
 }
 
 // ---- Storage helpers ----
-function loadStats()  { try { const s = JSON.parse(localStorage.getItem('km_stats') || 'null'); return s || { correct: 0, total: 0, streak: 0 }; } catch { return { correct: 0, total: 0, streak: 0 }; } }
-function saveStats(s) { try { localStorage.setItem('km_stats', JSON.stringify(s)); } catch {} }
+function loadStats()  { try { const s = JSON.parse(localStorage.getItem(KEYS.stats) || 'null'); return s || { correct: 0, total: 0, streak: 0 }; } catch { return { correct: 0, total: 0, streak: 0 }; } }
+function saveStats(s) { try { localStorage.setItem(KEYS.stats, JSON.stringify(s)); } catch {} }
 
-function loadLimit()  { try { const n = parseInt(localStorage.getItem('km_limit') || '5', 10); if (Number.isNaN(n)) return 5; return Math.min(ITEMS.length, Math.max(5, n)); } catch { return 5; } }
-function saveLimit()  { try { localStorage.setItem('km_limit', String(limit)); } catch {} }
+function loadLimit()  { try { const n = parseInt(localStorage.getItem(KEYS.limit) || '5', 10); if (Number.isNaN(n)) return 5; return Math.min(ITEMS.length, Math.max(5, n)); } catch { return 5; } }
+function saveLimit()  { try { localStorage.setItem(KEYS.limit, String(limit)); } catch {} }
 
-function saveScript() { try { localStorage.setItem('km_script', script); } catch {} }
+function saveScript() { try { localStorage.setItem(KEYS.script, script); } catch {} }

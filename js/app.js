@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // ============================
 function initTheme() {
   const toggle = document.getElementById('themeToggle');
-  const saved = localStorage.getItem('km_theme');
+  const saved = localStorage.getItem(KEYS.theme);
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
   const isDark = saved ? saved === 'dark' : prefersDark;
   applyTheme(isDark);
@@ -24,7 +24,7 @@ function initTheme() {
   toggle.addEventListener('click', () => {
     const nowDark = toggle.getAttribute('aria-checked') !== 'true';
     applyTheme(nowDark);
-    localStorage.setItem('km_theme', nowDark ? 'dark' : 'light');
+    localStorage.setItem(KEYS.theme, nowDark ? 'dark' : 'light');
   });
 
 
