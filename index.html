@@ -13,7 +13,7 @@
         <div class="logo" aria-hidden>あ</div>
         <div>
           <div style="font-weight:800">Kana Match — Romaji → Kana</div>
-          <div class="muted" style="font-size:12px">Show a random romaji. Pick the matching kana. &nbsp;<span style="font-size:11px;opacity:.5">v0.3.0</span></div>
+          <div class="muted" style="font-size:12px">Show a random romaji. Pick the matching kana. &nbsp;<span style="font-size:11px;opacity:.5">v0.4.0</span></div>
         </div>
       </div>
       <div class="row">
@@ -28,39 +28,92 @@
     </header>
 
     <main class="card pad" aria-live="polite">
-      <!-- Row 1: Stats pills -->
+
+      <!-- Row 1: Stat cards -->
       <div class="stats-row">
-        <span class="pill" id="acc">Accuracy — —</span>
-        <span class="pill" id="streak">Streak — 0</span>
-        <span class="pill" id="due">Due — <span id="due-count">0</span> · New — <span id="new-count">0</span></span>
+
+        <!-- Accuracy arc -->
+        <div class="arc-card" id="acc">
+          <div class="arc-wrap">
+            <svg class="arc-svg" viewBox="0 0 80 80">
+              <circle class="arc-track" cx="40" cy="40" r="30"/>
+              <circle class="arc-fill arc-fill--purple" id="acc-arc" cx="40" cy="40" r="30"/>
+            </svg>
+            <div class="arc-center">
+              <span class="arc-value" id="acc-value">—</span>
+            </div>
+          </div>
+          <span class="stat-chip__label">Accuracy</span>
+        </div>
+
+        <!-- Lesson arc -->
+        <div class="arc-card" id="lesson">
+          <div class="arc-wrap">
+            <svg class="arc-svg" viewBox="0 0 80 80">
+              <circle class="arc-track" cx="40" cy="40" r="30"/>
+              <circle class="arc-fill arc-fill--green" id="lesson-arc" cx="40" cy="40" r="30"/>
+            </svg>
+            <div class="arc-center">
+              <span class="arc-value" id="lesson-value">5<span class="arc-sub">/46</span></span>
+            </div>
+          </div>
+          <span class="stat-chip__label">Lesson</span>
+        </div>
+
+        <!-- Streak chip -->
+        <div class="stat-chip stat-chip--orange" id="streak">
+          <span class="stat-chip__value">0</span>
+          <span class="stat-chip__label">Streak</span>
+        </div>
+
+        <!-- To Study chip (due + new combined) -->
+        <div class="stat-chip stat-chip--blue" id="due">
+          <span class="stat-chip__value"><span id="due-count">0</span><span class="stat-chip__sub">+<span id="new-count">0</span></span></span>
+          <span class="stat-chip__label">To Study</span>
+        </div>
+
       </div>
 
-      <!-- Row 2: Lesson controls -->
-      <div class="controls-row">
-        <span class="pill" id="lesson">Lesson — 5 / 46</span>
-        <button class="btn" id="less5" title="Reduce deck by 5">−5</button>
-        <button class="btn" id="more5" title="Expand deck by 5">+5</button>
-        <button class="btn" id="all"   title="Use all base kana">All</button>
-        <button class="btn" id="reset" title="Reset all stats and SRS progress">Reset</button>
+      <!-- Row 2: Controls -->
+      <div class="btn-row">
+        <div class="btn-group">
+          <button class="btn btn-icon" id="less5" title="Reduce deck by 5">−5</button>
+          <button class="btn btn-icon" id="more5" title="Expand deck by 5">+5</button>
+          <button class="btn btn-icon" id="all" title="Use all base kana">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M3 3h7v7H3zm0 11h7v7H3zm11-11h7v7h-7zm0 11h7v7h-7z"/>
+            </svg>
+          </button>
+          <button class="btn btn-icon btn-danger" id="reset" title="Reset all stats and SRS progress">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 5V2L8 6l4 4V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/>
+            </svg>
+          </button>
+        </div>
+        <div class="btn-group">
+          <button class="btn btn-icon" id="speak" title="Play pronunciation">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+          </button>
+        </div>
       </div>
 
       <div class="prompt" id="prompt" aria-label="Romaji prompt">—</div>
       <div class="choices" id="choices" aria-label="Kana choices"></div>
 
-      <!-- Row 3: Actions -->
-      <div class="actions-row">
-        <button class="btn" id="speak" title="Play sound">🔊 Play</button>
+      <div class="toolbar">
         <button class="btn primary" id="next">Next →</button>
-        <button class="btn" id="skip"  title="Skip this one">Skip ↻</button>
       </div>
-      <p class="muted tips">
-        Tips: press 1–4 to answer · Space for Next · H/K to switch script
+
+      <p class="muted tips-desktop">
+        Tips: 1–4 to answer · Space for Next · H/K to switch script · ▶ to hear pronunciation
       </p>
 
       <!-- SRS Progress grid -->
       <section id="review-section" class="pad" aria-labelledby="review-title">
         <div class="row" style="justify-content:space-between">
-          <div class="muted" id="review-title">Kana progress — Lesson: <span id="deck-size">5</span> / 46</div>
+          <div class="muted" id="review-title">Kana progress</div>
         </div>
         <div class="kana-grid" id="kana-grid" aria-label="Kana progress grid"></div>
         <div class="muted legend">

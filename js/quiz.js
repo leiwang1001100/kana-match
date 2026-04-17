@@ -15,10 +15,10 @@ let srsCards   = loadSRSCards();
 let current = null;
 
 // ---- DOM refs (populated in init, after DOM is ready) ----
-let $tabH, $tabK, $prompt, $choices, $next, $skip, $speak;
+let $tabH, $tabK, $prompt, $choices, $next, $speak;
 let $acc, $streak, $due, $reset, $lesson, $less5, $more5, $all;
 let $celebrate, $celebrateAdd, $celebrateClose;
-let $grid, $deckSize, $dueCount, $newCount;
+let $grid, $dueCount, $newCount;
 
 // ---- Init ----
 function init() {
@@ -28,7 +28,6 @@ function init() {
   $prompt        = document.getElementById('prompt');
   $choices       = document.getElementById('choices');
   $next          = document.getElementById('next');
-  $skip          = document.getElementById('skip');
   $speak         = document.getElementById('speak');
   $acc           = document.getElementById('acc');
   $streak        = document.getElementById('streak');
@@ -42,7 +41,6 @@ function init() {
   $celebrateAdd  = document.getElementById('celebrate-add');
   $celebrateClose= document.getElementById('celebrate-close');
   $grid          = document.getElementById('kana-grid');
-  $deckSize      = document.getElementById('deck-size');
   $dueCount      = document.getElementById('due-count');
   $newCount      = document.getElementById('new-count');
 
@@ -61,7 +59,6 @@ function bindEvents() {
   $tabK.addEventListener('click', () => { script = 'katakana'; saveScript(); updateSeg(); renderGrid(); newQuestion(); });
 
   $next.addEventListener('click', () => newQuestion());
-  $skip.addEventListener('click', () => newQuestion());
 
   $reset.addEventListener('click', () => {
     stats = { correct: 0, total: 0, streak: 0 };
@@ -112,15 +109,35 @@ function updateSeg() {
   $tabK.setAttribute('aria-selected', String(script === 'katakana'));
 }
 
+// Arc circumference for r=30: 2πr ≈ 188.5, but we use a 270° partial arc
+// Track dasharray = 188.5 * 0.75 = 141 visible, rest gap
+// Fill: pct of 141
+const ARC_TOTAL = 141; // 270° of circumference (r=30)
+
+function setArc(arcEl, pct) {
+  if (!arcEl) return;
+  const filled = pct === null ? 0 : Math.round((pct / 100) * ARC_TOTAL);
+  arcEl.style.strokeDasharray = filled + ' 188';
+}
+
 function updateStatsUI() {
-  const pct = stats.total ? Math.round((stats.correct / stats.total) * 100) : '—';
-  $acc.textContent    = `Accuracy — ${pct}${stats.total ? '%' : ''}`;
-  $streak.textContent = `Streak — ${stats.streak || 0}`;
+  const pct = stats.total ? Math.round((stats.correct / stats.total) * 100) : null;
+  // Accuracy arc
+  const accVal = document.getElementById('acc-value');
+  const accArc = document.getElementById('acc-arc');
+  if (accVal) accVal.textContent = pct !== null ? `${pct}%` : '—';
+  setArc(accArc, pct);
+  // Streak chip
+  const streakVal = $streak.querySelector('.stat-chip__value');
+  if (streakVal) streakVal.textContent = String(stats.streak || 0);
 }
 
 function updateLessonUI() {
-  $lesson.textContent  = `Lesson — ${limit} / ${ITEMS.length}`;
-  $deckSize.textContent = String(limit);
+  // Lesson arc
+  const lessonVal = document.getElementById('lesson-value');
+  const lessonArc = document.getElementById('lesson-arc');
+  if (lessonVal) lessonVal.innerHTML = `${limit}<span class="arc-sub">/${ITEMS.length}</span>`;
+  setArc(lessonArc, Math.round((limit / ITEMS.length) * 100));
 }
 
 function updateDueUI() {
@@ -129,7 +146,7 @@ function updateDueUI() {
   const nw   = countNew(srsCards, deck);
   $dueCount.textContent = String(due);
   $newCount.textContent = String(nw);
-  $due.className = 'pill' + (due > 0 ? ' due' : '');
+  $due.className = 'stat-chip stat-chip--blue' + (due > 0 ? ' stat-chip--urgent' : '');
 }
 
 // ---- Core quiz logic ----

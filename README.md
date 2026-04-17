@@ -1,6 +1,6 @@
 # Kana Match 🎌
 
-![Version](https://img.shields.io/badge/version-v0.3.0-blue)
+![Version](https://img.shields.io/badge/version-v0.4.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
 A lightweight, offline-capable Japanese kana quiz app — no server, no dependencies, just open `index.html`.
