@@ -14,32 +14,38 @@ let srsCards   = loadSRSCards();
 /** @type {{answer:string, romaji:string, choices:string[], item:object} | null} */
 let current = null;
 
-// ---- DOM refs ----
-const $tabH          = document.getElementById('tab-hira');
-const $tabK          = document.getElementById('tab-kata');
-const $prompt        = document.getElementById('prompt');
-const $choices       = document.getElementById('choices');
-const $next          = document.getElementById('next');
-const $skip          = document.getElementById('skip');
-const $speak         = document.getElementById('speak');
-const $acc           = document.getElementById('acc');
-const $streak        = document.getElementById('streak');
-const $due           = document.getElementById('due');
-const $reset         = document.getElementById('reset');
-const $lesson        = document.getElementById('lesson');
-const $less5         = document.getElementById('less5');
-const $more5         = document.getElementById('more5');
-const $all           = document.getElementById('all');
-const $celebrate     = document.getElementById('celebrate');
-const $celebrateAdd  = document.getElementById('celebrate-add');
-const $celebrateClose= document.getElementById('celebrate-close');
-const $grid          = document.getElementById('kana-grid');
-const $deckSize      = document.getElementById('deck-size');
-const $dueCount      = document.getElementById('due-count');
-const $newCount      = document.getElementById('new-count');
+// ---- DOM refs (populated in init, after DOM is ready) ----
+let $tabH, $tabK, $prompt, $choices, $next, $skip, $speak;
+let $acc, $streak, $due, $reset, $lesson, $less5, $more5, $all;
+let $celebrate, $celebrateAdd, $celebrateClose;
+let $grid, $deckSize, $dueCount, $newCount;
 
 // ---- Init ----
 function init() {
+  // Resolve DOM refs now that the document is ready
+  $tabH          = document.getElementById('tab-hira');
+  $tabK          = document.getElementById('tab-kata');
+  $prompt        = document.getElementById('prompt');
+  $choices       = document.getElementById('choices');
+  $next          = document.getElementById('next');
+  $skip          = document.getElementById('skip');
+  $speak         = document.getElementById('speak');
+  $acc           = document.getElementById('acc');
+  $streak        = document.getElementById('streak');
+  $due           = document.getElementById('due');
+  $reset         = document.getElementById('reset');
+  $lesson        = document.getElementById('lesson');
+  $less5         = document.getElementById('less5');
+  $more5         = document.getElementById('more5');
+  $all           = document.getElementById('all');
+  $celebrate     = document.getElementById('celebrate');
+  $celebrateAdd  = document.getElementById('celebrate-add');
+  $celebrateClose= document.getElementById('celebrate-close');
+  $grid          = document.getElementById('kana-grid');
+  $deckSize      = document.getElementById('deck-size');
+  $dueCount      = document.getElementById('due-count');
+  $newCount      = document.getElementById('new-count');
+
   updateSeg();
   updateStatsUI();
   updateLessonUI();
