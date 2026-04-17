@@ -104,15 +104,6 @@ function bindEvents() {
   // Toast 75 — already auto-expanded, just dismiss
   $toast75Close.addEventListener('click', () => hideToast($toast75));
 
-  document.addEventListener('keydown', (e) => {
-    if (e.key === ' ') { e.preventDefault(); newQuestion(); return; }
-    if (e.key === 'h' || e.key === 'H') { script = 'hiragana'; saveScript(); updateSeg(); renderGrid(); newQuestion(); return; }
-    if (e.key === 'k' || e.key === 'K') { script = 'katakana'; saveScript(); updateSeg(); renderGrid(); newQuestion(); return; }
-    if (['1','2','3','4'].includes(e.key)) {
-      const btn = $choices.querySelectorAll('button')[Number(e.key) - 1];
-      if (btn) btn.click();
-    }
-  });
 }
 
 // ---- UI helpers ----

@@ -30,7 +30,7 @@ function initTheme() {
 
   // Listen for system theme changes (with Safari < 14 fallback)
   const mq = window.matchMedia('(prefers-color-scheme: dark)');
-  const mqHandler = e => { if (!localStorage.getItem('km_theme')) applyTheme(e.matches); };
+  const mqHandler = e => { if (!localStorage.getItem(KEYS.theme)) applyTheme(e.matches); };
   try { mq.addEventListener('change', mqHandler); }
   catch { try { mq.addListener(mqHandler); } catch {} }
 }

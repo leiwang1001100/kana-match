@@ -12,7 +12,7 @@
 //   lapses:     number   — times answered wrong after being learnt
 // }
 
-const SRS_STORE_KEY = 'km_srs_cards';
+const SRS_STORE_KEY = 'km_srs_cards'; // must match KEYS.srs in quiz.js
 const MIN_EASE = 1.3;
 const DEFAULT_EASE = 2.5;
 
