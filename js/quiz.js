@@ -24,18 +24,13 @@ let srsCards = loadSRSCards();
 let current     = null;
 let lastAnswer  = null; // persists after current is nulled, for Play button
 
-// ---- Timers ----
-let _toastTimer  = null;
-let _expandTimer = null;
-
-// ---- Milestones ----
-let milestones = loadMilestones();
+// _toastTimer, _expandTimer, milestones — defined in milestones.js
 
 // ---- DOM refs (populated in init, after DOM is ready) ----
 let $tabH, $tabK, $prompt, $choices, $next, $speak;
 let $acc, $streak, $due, $reset, $lesson, $less5, $more5, $all;
 let $celebrate, $celebrateClose;
-let $toast50, $toast50Yes, $toast50No, $toast75, $toast75Close;
+// $toast50, $toast50Yes etc. — defined in milestones.js
 let $grid, $dueCount, $newCount;
 
 // ---- Init ----
@@ -57,11 +52,7 @@ function init() {
   $all           = document.getElementById('all');
   $celebrate      = document.getElementById('celebrate');
   $celebrateClose = document.getElementById('celebrate-close');
-  $toast50        = document.getElementById('toast-50');
-  $toast50Yes     = document.getElementById('toast-50-yes');
-  $toast50No      = document.getElementById('toast-50-no');
-  $toast75        = document.getElementById('toast-75');
-  $toast75Close   = document.getElementById('toast-75-close');
+  initMilestones(); // initialise toast DOM refs and events
   $grid          = document.getElementById('kana-grid');
   $dueCount      = document.getElementById('due-count');
   $newCount      = document.getElementById('new-count');
@@ -93,10 +84,7 @@ function bindEvents() {
     current = null;
     lastAnswer = null;
     // Clear all milestone UI and pending timers
-    clearTimeout(_toastTimer); _toastTimer = null;
-    clearTimeout(_expandTimer); _expandTimer = null;
-    hideToast($toast50);
-    hideToast($toast75);
+    resetMilestones();
     hideCelebrate();
     updateStatsUI();
     updateLessonUI();
@@ -127,16 +115,6 @@ function bindEvents() {
   });
 
   $celebrateClose.addEventListener('click', hideCelebrate);
-
-  // Toast 50 — ask user
-  $toast50Yes.addEventListener('click', () => {
-    hideToast($toast50);
-    expandDeck();
-  });
-  $toast50No.addEventListener('click', () => hideToast($toast50));
-
-  // Toast 75 — already auto-expanded, just dismiss
-  $toast75Close.addEventListener('click', () => hideToast($toast75));
 
 }
 
@@ -270,58 +248,7 @@ function speakText(text) {
 }
 function speak() { if (!lastAnswer) return; speakText(lastAnswer.answer); }
 
-// ---- Deck expansion (keeps streak) ----
-// Delay newQuestion so user sees the answer feedback first
-function expandDeck() {
-  if (limit >= ITEMS.length) return;
-  limit = Math.min(ITEMS.length, limit + 5);
-  saveLimit();
-  updateLessonUI();
-  updateDueUI();
-  renderGrid();
-  _expandTimer = setTimeout(() => { _expandTimer = null; newQuestion(); }, 800);
-}
-
-// ---- Toast helpers ----
-function showToast(el, autoDismissMs) {
-  if (!el) return;
-  el.classList.add('show');
-  if (autoDismissMs) {
-    clearTimeout(_toastTimer);
-    _toastTimer = setTimeout(() => hideToast(el), autoDismissMs);
-  }
-}
-function hideToast(el) { if (el) el.classList.remove('show'); }
-
-// ---- Milestones ----
-// Track which milestones have fired per deck size
-function loadMilestones()  { try { return JSON.parse(localStorage.getItem(KEYS.milestones) || '{}'); } catch { return {}; } }
-function saveMilestones(m) { try { localStorage.setItem(KEYS.milestones, JSON.stringify(m)); } catch {} }
-
-function maybeMilestone() {
-  const s = stats.streak;
-  const key50 = `${limit}_50`, key75 = `${limit}_75`, key100 = `${limit}_100`;
-  const atMax = limit >= ITEMS.length;
-
-  // 50 streak — ask toast (only if room to expand)
-  if (s >= 50 && s < 75 && !milestones[key50]) {
-    milestones[key50] = true; saveMilestones(milestones);
-    if (!atMax) showToast($toast50, 0);
-    return;
-  }
-  // 75 streak — auto expand + notify (only if room to expand)
-  if (s >= 75 && s < 100 && !milestones[key75]) {
-    milestones[key75] = true; saveMilestones(milestones);
-    if (!atMax) { expandDeck(); showToast($toast75, 6000); }
-    return;
-  }
-  // 100 streak — auto expand + celebrate (only if room to expand)
-  if (s >= 100 && !milestones[key100]) {
-    milestones[key100] = true; saveMilestones(milestones);
-    if (!atMax) { expandDeck(); showCelebrate(); }
-    return;
-  }
-}
+// expandDeck, showToast, hideToast, maybeMilestone, resetMilestones — defined in milestones.js
 
 // ---- Celebration (100 streak modal) ----
 function showCelebrate() { $celebrate.classList.add('show'); }
