@@ -22,12 +22,16 @@ All progress is saved locally in your browser via `localStorage` — no account 
 ## Features
 
 - 🔤 **Hiragana & Katakana** — toggle between scripts anytime
-- 📚 **Lesson limiter** — start with just 5 kana, expand by +5 as you improve
-- 📊 **Accuracy & streak tracking** — live stats with localStorage persistence
-- 🟩 **Progress grid** — see which kana you've practised at a glance
-- 🔊 **Audio playback** — hear the kana spoken using your browser's Japanese voice
-- 🎉 **Celebration modal** — triggered at 100-answer streak with 100% accuracy
-- ⌨️ **Keyboard shortcuts**:
+- 🧠 **Spaced Repetition (SM-2)** — cards you miss come back sooner; cards you know are scheduled further out
+- 📊 **Arc progress rings** — Accuracy and Lesson shown as animated partial arc rings
+- 🟩 **Kana progress grid** — colour-coded by SRS level (New / Learning / Young / Mature)
+- 🔥 **Streak milestones** — toasts at 50 streak, auto-expand at 75 and 100
+- 📚 **Lesson limiter** — start with 5 kana, grows automatically as you improve
+- 🔊 **Audio playback** — hear the kana via your browser's Japanese voice
+- 🌙 **Dark mode** — toggle with the ◑ button, respects system preference
+- 🎨 **Glassmorphism UI** — animated gradient background, frosted glass cards and buttons
+- 📱 **Mobile friendly** — responsive layout, works great on phone and tablet
+- ⌨️ **Keyboard shortcuts** (desktop):
   - `1`–`4` → answer choices
   - `Space` → next question
   - `H` → switch to Hiragana
