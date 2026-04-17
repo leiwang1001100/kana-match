@@ -27,6 +27,7 @@ function initTheme() {
     localStorage.setItem('km_theme', nowDark ? 'dark' : 'light');
   });
 
+
   // Listen for system theme changes (with Safari < 14 fallback)
   const mq = window.matchMedia('(prefers-color-scheme: dark)');
   const mqHandler = e => { if (!localStorage.getItem('km_theme')) applyTheme(e.matches); };
@@ -39,7 +40,6 @@ function applyTheme(dark) {
   const toggle = document.getElementById('themeToggle');
   if (toggle) {
     toggle.setAttribute('aria-checked', String(dark));
-    toggle.setAttribute('aria-pressed', String(dark));
   }
 }
 
