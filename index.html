@@ -28,30 +28,32 @@
     </header>
 
     <main class="card pad" aria-live="polite">
-      <div class="row" style="justify-content:space-between">
-        <div class="stats">
-          <span class="pill" id="acc">Accuracy — —</span>
-          <span class="pill" id="streak">Streak — 0</span>
-          <span class="pill" id="due">Due — <span id="due-count">0</span> · New — <span id="new-count">0</span></span>
-          <span class="pill" id="lesson">Lesson — 5 / 46</span>
-          <button class="btn" id="less5" title="Reduce deck by 5">−5</button>
-          <button class="btn" id="more5" title="Expand deck by 5">+5</button>
-          <button class="btn" id="all"   title="Use all base kana">All</button>
-          <button class="btn" id="reset" title="Reset all stats and SRS progress">Reset</button>
-        </div>
-        <div class="row">
-          <button class="btn" id="speak" title="Play sound with your browser's Japanese voice">🔊 Play</button>
-          <button class="btn" id="skip"  title="Skip this one">Skip ↻</button>
-        </div>
+      <!-- Row 1: Stats pills -->
+      <div class="stats-row">
+        <span class="pill" id="acc">Accuracy — —</span>
+        <span class="pill" id="streak">Streak — 0</span>
+        <span class="pill" id="due">Due — <span id="due-count">0</span> · New — <span id="new-count">0</span></span>
+      </div>
+
+      <!-- Row 2: Lesson controls -->
+      <div class="controls-row">
+        <span class="pill" id="lesson">Lesson — 5 / 46</span>
+        <button class="btn" id="less5" title="Reduce deck by 5">−5</button>
+        <button class="btn" id="more5" title="Expand deck by 5">+5</button>
+        <button class="btn" id="all"   title="Use all base kana">All</button>
+        <button class="btn" id="reset" title="Reset all stats and SRS progress">Reset</button>
       </div>
 
       <div class="prompt" id="prompt" aria-label="Romaji prompt">—</div>
       <div class="choices" id="choices" aria-label="Kana choices"></div>
 
-      <div class="toolbar">
-        <button class="btn primary" id="next">Next</button>
+      <!-- Row 3: Actions -->
+      <div class="actions-row">
+        <button class="btn" id="speak" title="Play sound">🔊 Play</button>
+        <button class="btn primary" id="next">Next →</button>
+        <button class="btn" id="skip"  title="Skip this one">Skip ↻</button>
       </div>
-      <p class="muted" style="text-align:center;margin:10px 0 0">
+      <p class="muted tips">
         Tips: press 1–4 to answer · Space for Next · H/K to switch script
       </p>
 

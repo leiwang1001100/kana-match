@@ -79,6 +79,28 @@ header {
 
 .muted { color: var(--muted); }
 
+/* Stats row */
+.stats-row {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  margin-bottom: 8px;
+}
+
+/* Lesson controls row */
+.controls-row {
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+  margin-bottom: 4px;
+}
+
+/* Actions row (Play, Next, Skip) */
+.actions-row {
+  display: flex; gap: 10px; justify-content: center;
+  margin-top: 14px; flex-wrap: wrap;
+}
+.actions-row .btn { flex: 1; max-width: 160px; text-align: center; }
+.actions-row .btn.primary { flex: 2; max-width: 240px; }
+
+.tips { text-align: center; margin: 10px 0 0; font-size: 13px; }
+
 .prompt {
   font-size: 64px; font-weight: 800;
   letter-spacing: .5px; text-align: center;
@@ -101,8 +123,6 @@ header {
 .choices button.correct { outline: 3px solid var(--ok); border-color: var(--ok); }
 .choices button.wrong   { outline: 3px solid var(--err); border-color: var(--err); }
 
-.toolbar { display: flex; justify-content: center; gap: 10px; margin-top: 14px; }
-
 .btn {
   padding: 10px 14px; border-radius: 12px;
   border: 1px solid var(--border); background: var(--card);
@@ -117,7 +137,28 @@ header {
 }
 .pill.due { color: var(--brand); border-color: var(--brand); font-weight: 700; }
 
-.stats { display: flex; gap: 8px; flex-wrap: wrap; }
+/* ---- Mobile layout ---- */
+@media (max-width: 600px) {
+  .wrap { padding: 12px; }
+
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .pad { padding: 14px; }
+
+  .prompt { font-size: 48px; margin: 12px 0; }
+
+  .choices button { font-size: 32px; padding: 14px; }
+
+  .kana-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .tips { font-size: 11px; }
+}
 
 /* Modal */
 .modal {
