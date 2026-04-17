@@ -91,21 +91,11 @@ All 46 base kana across 11 rows:
 
 ---
 
-## Changelog
+## Releases & Changelog
 
-### v0.2.0 — 2026-04-17
-- ♻️ Refactored into modular files (`styles.css`, `js/data.js`, `js/srs.js`, `js/quiz.js`, `js/app.js`)
-- 🧠 Added **Spaced Repetition System (SM-2 algorithm)** — cards you miss come back sooner
-- 🟩 Progress grid now shows 4 SRS levels: New / Learning / Young / Mature
-- 📊 Stats bar now shows **Due** and **New** card counts
-- ✅ Expanded self-tests to cover SRS logic
+See the [Releases page](https://github.com/leiwang1001100/kana-match/releases) for full release notes and changelogs.
 
-### v0.1.0 — 2026-04-17
-- 🎌 Initial release — 46 base kana quiz (Hiragana & Katakana)
-- Lesson limiter (+5 / −5 / All)
-- Accuracy & streak tracking with localStorage persistence
-- Progress grid, audio playback, celebration modal
-- Keyboard shortcuts (1–4, Space, H, K)
+Each release includes a downloadable **zip** and **tar.gz** of the full source — just extract and open `index.html` offline.
 
 ---
 
