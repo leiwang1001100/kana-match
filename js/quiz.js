@@ -91,6 +91,7 @@ function bindEvents() {
     limit = 5;
     saveLimit();
     current = null;
+    lastAnswer = null;
     // Clear all milestone UI and pending timers
     clearTimeout(_toastTimer); _toastTimer = null;
     clearTimeout(_expandTimer); _expandTimer = null;
@@ -169,9 +170,9 @@ function updateDueUI() {
   const deck = ITEMS.slice(0, limit);
   const due  = countDue(srsCards, deck);
   const nw   = countNew(srsCards, deck);
-  $dueCount.textContent = String(due);
-  $newCount.textContent = String(nw);
-  $due.className = 'stat-chip stat-chip--blue' + (due > 0 ? ' stat-chip--urgent' : '');
+  if ($dueCount) $dueCount.textContent = String(due);
+  if ($newCount) $newCount.textContent = String(nw);
+  if ($due) $due.className = 'stat-chip stat-chip--blue' + (due > 0 ? ' stat-chip--urgent' : '');
 }
 
 // ---- Core quiz logic ----
@@ -315,7 +316,7 @@ function renderGrid() {
   const deck = new Set(ITEMS.slice(0, limit).map(x => x.romaji));
   const existing = $grid.querySelectorAll('.kana-cell');
 
-  // Full rebuild only if cell count doesn't match (first render or script switch)
+  // Full rebuild only if cell count doesn't match (first render uses .kana-cell=0, or script switch)
   if (existing.length !== ITEMS.length) {
     $grid.innerHTML = '';
     for (const it of ITEMS) {

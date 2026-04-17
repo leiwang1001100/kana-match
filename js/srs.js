@@ -14,6 +14,7 @@
 
 const SRS_STORE_KEY = 'km_srs_cards'; // must match KEYS.srs in quiz.js
 const MIN_EASE = 1.3;
+const MAX_EASE = 4.0;
 const DEFAULT_EASE = 2.5;
 
 // Returns today as "YYYY-MM-DD" in local time (not UTC)
@@ -78,7 +79,7 @@ function reviewCard(card, quality) {
     } else {
       card.interval = Math.round(card.interval * card.easeFactor);
     }
-    card.easeFactor = Math.max(MIN_EASE, card.easeFactor + 0.1);
+    card.easeFactor = Math.min(MAX_EASE, Math.max(MIN_EASE, card.easeFactor + 0.1));
     card.dueDate = addDays(t, card.interval);
   } else {
     // Wrong answer — reset to relearning

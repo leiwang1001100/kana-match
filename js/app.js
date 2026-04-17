@@ -157,5 +157,13 @@ function runSelfTests() {
     assert(deck.some(it => it.romaji === picked.romaji), 'should pick a card from the deck');
   });
 
+  group('SRS — easeFactor capped at MAX_EASE', () => {
+    const card = { romaji:'a', interval:3, easeFactor:3.9, dueDate:'2026-01-01', lapses:0 };
+    reviewCard(card, 1);
+    assert(card.easeFactor <= 4.0, `easeFactor should not exceed 4.0, got ${card.easeFactor}`);
+    reviewCard(card, 1);
+    assert(card.easeFactor <= 4.0, `easeFactor should stay capped at 4.0, got ${card.easeFactor}`);
+  });
+
   console.info('%cSelf-tests complete.', 'color:#16a34a;font-weight:600');
 }
