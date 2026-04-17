@@ -80,7 +80,11 @@ function bindEvents() {
     srsCards = resetSRSCards();
     milestones = {};
     saveMilestones(milestones);
+    limit = 5;
+    saveLimit();
+    current = null;
     updateStatsUI();
+    updateLessonUI();
     updateDueUI();
     renderGrid();
     newQuestion();
@@ -119,7 +123,6 @@ function updateSeg() {
 const ARC_R           = 30;
 const ARC_CIRCUMF     = Math.round(2 * Math.PI * ARC_R * 10) / 10; // 188.5
 const ARC_TRACK_LEN   = Math.round(ARC_CIRCUMF * 0.75);             // 141 (270°)
-const ARC_GAP         = ARC_CIRCUMF - ARC_TRACK_LEN;                // 47.5
 
 function setArc(arcEl, pct) {
   if (!arcEl) return;

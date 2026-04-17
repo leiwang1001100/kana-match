@@ -27,7 +27,6 @@ function initTheme() {
     localStorage.setItem(KEYS.theme, nowDark ? 'dark' : 'light');
   });
 
-
   // Listen for system theme changes (with Safari < 14 fallback)
   const mq = window.matchMedia('(prefers-color-scheme: dark)');
   const mqHandler = e => { if (!localStorage.getItem(KEYS.theme)) applyTheme(e.matches); };
@@ -111,13 +110,16 @@ function runSelfTests() {
     assert(picked.romaji === deck[0].romaji, `should pick due card, got ${picked.romaji}`);
   });
 
-  group('celebrate condition logic (pure)', () => {
-    const pure = (st, lim, cel) => st.streak >= 100 && st.total > 0 && st.correct === st.total && !cel.includes(lim);
-    const st1 = { correct: 100, total: 100, streak: 100 };
-    const st2 = { correct: 99,  total: 100, streak: 100 };
-    assert(pure(st1, 5, [])  === true,  'should celebrate on perfect 100');
-    assert(pure(st2, 5, [])  === false, 'should not celebrate at <100%');
-    assert(pure(st1, 5, [5]) === false, 'should not repeat same limit');
+  group('100-streak milestone fires once per deck size', () => {
+    // Verify milestone key format used in maybeMilestone()
+    const key = (lim) => `${lim}_100`;
+    assert(key(5)  === '5_100',  '5-card deck key should be 5_100');
+    assert(key(10) === '10_100', '10-card deck key should be 10_100');
+    // Verify milestone check logic
+    const shouldFire = (streak, ms, lim) => streak >= 100 && !ms[key(lim)];
+    assert(shouldFire(100, {}, 5)             === true,  'should fire at 100 streak');
+    assert(shouldFire(99,  {}, 5)             === false, 'should not fire at 99 streak');
+    assert(shouldFire(100, {'5_100': true}, 5) === false, 'should not repeat same deck size');
   });
 
   group('milestone cascade — 50/75/100 fire in correct windows', () => {
