@@ -16,9 +16,13 @@ const SRS_STORE_KEY = 'km_srs_cards'; // must match KEYS.srs in quiz.js
 const MIN_EASE = 1.3;
 const DEFAULT_EASE = 2.5;
 
-// Returns today as "YYYY-MM-DD"
+// Returns today as "YYYY-MM-DD" in local time (not UTC)
 function today() {
-  return new Date().toISOString().slice(0, 10);
+  const d = new Date();
+  const yyyy = d.getFullYear();
+  const mm   = String(d.getMonth() + 1).padStart(2, '0');
+  const dd   = String(d.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
 }
 
 // Returns a date string N days from today

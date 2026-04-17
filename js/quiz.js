@@ -195,12 +195,14 @@ function newQuestion() {
 
 function handleAnswer(btn, choice) {
   if (!current) return;
-  const correct = choice === current.answer;
+  const { answer, romaji } = current;
+  current = null; // guard against double-click
+  const correct = choice === answer;
 
   // Highlight correct / wrong
   for (const b of $choices.querySelectorAll('button')) {
     b.disabled = true;
-    if (b.textContent === current.answer) b.classList.add('correct');
+    if (b.textContent === answer) b.classList.add('correct');
   }
   if (!correct) btn.classList.add('wrong');
 
@@ -212,7 +214,7 @@ function handleAnswer(btn, choice) {
   updateStatsUI();
 
   // Update SRS card
-  const card = getCard(srsCards, current.romaji);
+  const card = getCard(srsCards, romaji);
   reviewCard(card, correct ? 1 : 0);
   saveSRSCards(srsCards);
 
@@ -231,6 +233,7 @@ function speakText(text) {
 function speak() { if (!current) return; speakText(current.answer); }
 
 // ---- Deck expansion (keeps streak) ----
+// Delay newQuestion so user sees the answer feedback first
 function expandDeck() {
   if (limit >= ITEMS.length) return;
   limit = Math.min(ITEMS.length, limit + 5);
@@ -238,7 +241,7 @@ function expandDeck() {
   updateLessonUI();
   updateDueUI();
   renderGrid();
-  newQuestion();
+  setTimeout(() => newQuestion(), 800);
 }
 
 // ---- Toast helpers ----
