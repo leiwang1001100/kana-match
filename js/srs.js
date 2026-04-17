@@ -94,12 +94,6 @@ function srsLevel(card) {
   return 'mature';
 }
 
-// Is this card due today or overdue?
-function isDue(card) {
-  if (!card || card.dueDate === null) return false; // new cards handled separately
-  return card.dueDate <= today();
-}
-
 // Pick the next card to show from the deck (first N ITEMS)
 // Priority: 1) due cards (overdue first)  2) new cards  3) earliest due future card
 function pickNextCard(cards, deck) {

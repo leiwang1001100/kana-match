@@ -5,11 +5,10 @@
 // ============================
 
 // ---- Persisted state ----
-let script     = localStorage.getItem('km_script') || 'hiragana';
-let stats      = loadStats();
-let limit      = loadLimit();
-let celebrated = loadCelebrated();
-let srsCards   = loadSRSCards();
+let script   = localStorage.getItem('km_script') || 'hiragana';
+let stats    = loadStats();
+let limit    = loadLimit();
+let srsCards = loadSRSCards();
 
 /** @type {{answer:string, romaji:string, choices:string[], item:object} | null} */
 let current = null;
@@ -69,6 +68,8 @@ function bindEvents() {
     stats = { correct: 0, total: 0, streak: 0 };
     saveStats(stats);
     srsCards = resetSRSCards();
+    milestones = {};
+    saveMilestones(milestones);
     updateStatsUI();
     updateDueUI();
     renderGrid();
@@ -217,6 +218,7 @@ function handleAnswer(btn, choice) {
 }
 
 function speakText(text) {
+  if (!('speechSynthesis' in window)) return;
   const u = new SpeechSynthesisUtterance(text);
   u.lang = 'ja-JP';
   speechSynthesis.cancel();
@@ -257,24 +259,25 @@ function maybeMilestone() {
   const s = stats.streak;
   const key50 = `${limit}_50`, key75 = `${limit}_75`, key100 = `${limit}_100`;
 
-  // 100 streak — auto expand + celebrate
-  if (s >= 100 && !milestones[key100]) {
-    milestones[key100] = true; saveMilestones(milestones);
-    expandDeck();
-    showCelebrate();
+  // Check in ascending order so lower milestones can fire first
+  // 50 streak — ask toast (only if 75/100 haven't fired yet)
+  if (s >= 50 && s < 75 && !milestones[key50]) {
+    milestones[key50] = true; saveMilestones(milestones);
+    showToast($toast50, 0); // no auto-dismiss — user must respond
     return;
   }
-  // 75 streak — auto expand + notify toast
-  if (s >= 75 && !milestones[key75] && !milestones[key100]) {
+  // 75 streak — auto expand + notify toast (only if 100 hasn't fired yet)
+  if (s >= 75 && s < 100 && !milestones[key75]) {
     milestones[key75] = true; saveMilestones(milestones);
     expandDeck();
     showToast($toast75, 6000);
     return;
   }
-  // 50 streak — ask toast
-  if (s >= 50 && !milestones[key50] && !milestones[key75] && !milestones[key100]) {
-    milestones[key50] = true; saveMilestones(milestones);
-    showToast($toast50, 0); // no auto-dismiss — user must respond
+  // 100 streak — auto expand + celebrate
+  if (s >= 100 && !milestones[key100]) {
+    milestones[key100] = true; saveMilestones(milestones);
+    expandDeck();
+    showCelebrate();
     return;
   }
 }
@@ -313,13 +316,10 @@ function shuffle(a) {
 }
 
 // ---- Storage helpers ----
-function loadStats()     { try { const s = JSON.parse(localStorage.getItem('km_stats') || 'null'); return s || { correct: 0, total: 0, streak: 0 }; } catch { return { correct: 0, total: 0, streak: 0 }; } }
-function saveStats(s)    { try { localStorage.setItem('km_stats', JSON.stringify(s)); } catch {} }
+function loadStats()  { try { const s = JSON.parse(localStorage.getItem('km_stats') || 'null'); return s || { correct: 0, total: 0, streak: 0 }; } catch { return { correct: 0, total: 0, streak: 0 }; } }
+function saveStats(s) { try { localStorage.setItem('km_stats', JSON.stringify(s)); } catch {} }
 
-function loadLimit()     { try { const n = parseInt(localStorage.getItem('km_limit') || '5', 10); if (Number.isNaN(n)) return 5; return Math.min(ITEMS.length, Math.max(5, n)); } catch { return 5; } }
-function saveLimit()     { try { localStorage.setItem('km_limit', String(limit)); } catch {} }
+function loadLimit()  { try { const n = parseInt(localStorage.getItem('km_limit') || '5', 10); if (Number.isNaN(n)) return 5; return Math.min(ITEMS.length, Math.max(5, n)); } catch { return 5; } }
+function saveLimit()  { try { localStorage.setItem('km_limit', String(limit)); } catch {} }
 
-function loadCelebrated(){ try { const arr = JSON.parse(localStorage.getItem('km_celebrated') || '[]'); return Array.isArray(arr) ? arr : []; } catch { return []; } }
-function saveCelebrated(){ try { localStorage.setItem('km_celebrated', JSON.stringify(celebrated)); } catch {} }
-
-function saveScript()    { try { localStorage.setItem('km_script', script); } catch {} }
+function saveScript() { try { localStorage.setItem('km_script', script); } catch {} }
