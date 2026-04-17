@@ -436,6 +436,7 @@ header {
 .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px; }
 
 /* ---- Progress grid ---- */
+.review-section { padding: 0 24px 24px; }
 .kana-grid {
   display: grid;
   grid-template-columns: repeat(10, minmax(0,1fr));

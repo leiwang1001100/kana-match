@@ -181,6 +181,7 @@ function newQuestion() {
   if (_expandTimer) { clearTimeout(_expandTimer); _expandTimer = null; }
   $choices.innerHTML = '';
   const deck = ITEMS.slice(0, limit);
+  if (!deck.length) return; // safety guard — should never happen with limit >= 5
 
   // SRS: pick the best next card
   const ans = pickNextCard(srsCards, deck);
