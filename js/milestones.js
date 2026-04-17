@@ -3,8 +3,8 @@
 // ============================
 // MILESTONE & TOAST LOGIC
 // ============================
-// Depends on: KEYS (quiz.js), ITEMS (data.js)
-// Calls back into quiz.js: expandDeck(), newQuestion(), showCelebrate(), hideCelebrate()
+// Depends on: ITEMS (data.js), KEYS/stats/limit/saveLimit/updateLessonUI/updateDueUI/renderGrid/newQuestion/showCelebrate/hideCelebrate (quiz.js)
+// Load order: data.js → srs.js → quiz.js → milestones.js → app.js
 
 // ---- Timers ----
 var _toastTimer  = null;
@@ -24,9 +24,9 @@ function initMilestones() {
   $toast75      = document.getElementById('toast-75');
   $toast75Close = document.getElementById('toast-75-close');
 
-  $toast50Yes.addEventListener('click', () => { hideToast($toast50); expandDeck(); });
-  $toast50No.addEventListener('click',  () => hideToast($toast50));
-  $toast75Close.addEventListener('click', () => hideToast($toast75));
+  if ($toast50Yes)   $toast50Yes.addEventListener('click', () => { hideToast($toast50); expandDeck(); });
+  if ($toast50No)    $toast50No.addEventListener('click',  () => hideToast($toast50));
+  if ($toast75Close) $toast75Close.addEventListener('click', () => hideToast($toast75));
 }
 
 // ---- Toast helpers ----
@@ -53,8 +53,10 @@ function expandDeck() {
 }
 
 // ---- Milestone checks ----
-function loadMilestones()  { try { return JSON.parse(localStorage.getItem(KEYS.milestones) || '{}'); } catch { return {}; } }
-function saveMilestones(m) { try { localStorage.setItem(KEYS.milestones, JSON.stringify(m)); } catch {} }
+// Use literal key string — KEYS may not be defined when this file first loads
+const MILESTONE_KEY = 'km_milestones';
+function loadMilestones()  { try { return JSON.parse(localStorage.getItem(MILESTONE_KEY) || '{}'); } catch { return {}; } }
+function saveMilestones(m) { try { localStorage.setItem(MILESTONE_KEY, JSON.stringify(m)); } catch {} }
 
 function maybeMilestone() {
   const s = stats.streak;
