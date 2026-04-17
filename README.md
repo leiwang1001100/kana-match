@@ -45,9 +45,12 @@ All progress is saved locally in your browser via `localStorage` — no account 
 Visit **https://leiwang1001100.github.io/kana-match/**
 
 ### Offline
-1. Clone or download the repo
-2. Open `index.html` in any modern browser — no install needed
+**Option 1 — Download a release (recommended):**
+1. Go to the [Releases page](https://github.com/leiwang1001100/kana-match/releases)
+2. Download the **zip** or **tar.gz** from the latest release
+3. Extract and open `index.html` in any modern browser — no install needed
 
+**Option 2 — Clone the repo:**
 ```bash
 git clone https://github.com/leiwang1001100/kana-match.git
 cd kana-match
