@@ -13,7 +13,7 @@
         <div class="logo" aria-hidden>あ</div>
         <div>
           <div style="font-weight:800">Kana Match — Romaji → Kana</div>
-          <div class="muted" style="font-size:12px">Show a random romaji. Pick the matching kana. &nbsp;<span style="font-size:11px;opacity:.5">v0.4.0</span></div>
+          <div class="muted" style="font-size:12px">Show a random romaji. Pick the matching kana. &nbsp;<span style="font-size:11px;opacity:.5">v0.4.1</span></div>
         </div>
       </div>
       <div class="row">
@@ -125,15 +125,41 @@
         </div>
       </section>
 
-      <!-- Celebration modal -->
+      <!-- Celebration modal (100 streak) -->
       <div id="celebrate" class="modal" role="dialog" aria-modal="true" aria-labelledby="celebrate-title" aria-describedby="celebrate-desc">
         <div class="modal-card">
-          <h2 id="celebrate-title" style="margin:0 0 6px;font-size:20px;font-weight:800;">Awesome streak! 🎉</h2>
-          <p id="celebrate-desc" class="muted">You hit a 100‑answer streak with 100% accuracy. You're on fire — want to learn another 5?</p>
+          <h2 id="celebrate-title" style="margin:0 0 6px;font-size:20px;font-weight:800;">🏆 100 streak!</h2>
+          <p id="celebrate-desc" class="muted">Incredible! You've hit a 100-answer streak. We've automatically added 5 new kana to keep you challenged!</p>
           <div class="modal-actions">
-            <button class="btn" id="celebrate-close">Not now</button>
-            <button class="btn primary" id="celebrate-add">Add +5</button>
+            <button class="btn primary" id="celebrate-close">Let's go! →</button>
           </div>
+        </div>
+      </div>
+
+      <!-- Milestone toast (50 streak — ask) -->
+      <div id="toast-50" class="toast" role="alert" aria-live="polite">
+        <div class="toast-content">
+          <span class="toast-icon">🔥</span>
+          <div>
+            <div class="toast-title">50 streak!</div>
+            <div class="toast-msg">You're doing great — add 5 new kana?</div>
+          </div>
+          <div class="toast-actions">
+            <button class="btn btn-sm" id="toast-50-no">Not yet</button>
+            <button class="btn btn-sm primary" id="toast-50-yes">Add +5</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Milestone toast (75 streak — auto notify) -->
+      <div id="toast-75" class="toast" role="alert" aria-live="polite">
+        <div class="toast-content">
+          <span class="toast-icon">⚡</span>
+          <div>
+            <div class="toast-title">75 streak!</div>
+            <div class="toast-msg">You're on a roll — 5 new kana added!</div>
+          </div>
+          <button class="btn btn-sm" id="toast-75-close">✕</button>
         </div>
       </div>
     </main>

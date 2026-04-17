@@ -17,7 +17,8 @@ let current = null;
 // ---- DOM refs (populated in init, after DOM is ready) ----
 let $tabH, $tabK, $prompt, $choices, $next, $speak;
 let $acc, $streak, $due, $reset, $lesson, $less5, $more5, $all;
-let $celebrate, $celebrateAdd, $celebrateClose;
+let $celebrate, $celebrateClose;
+let $toast50, $toast50Yes, $toast50No, $toast75, $toast75Close;
 let $grid, $dueCount, $newCount;
 
 // ---- Init ----
@@ -37,9 +38,13 @@ function init() {
   $less5         = document.getElementById('less5');
   $more5         = document.getElementById('more5');
   $all           = document.getElementById('all');
-  $celebrate     = document.getElementById('celebrate');
-  $celebrateAdd  = document.getElementById('celebrate-add');
-  $celebrateClose= document.getElementById('celebrate-close');
+  $celebrate      = document.getElementById('celebrate');
+  $celebrateClose = document.getElementById('celebrate-close');
+  $toast50        = document.getElementById('toast-50');
+  $toast50Yes     = document.getElementById('toast-50-yes');
+  $toast50No      = document.getElementById('toast-50-no');
+  $toast75        = document.getElementById('toast-75');
+  $toast75Close   = document.getElementById('toast-75-close');
   $grid          = document.getElementById('kana-grid');
   $dueCount      = document.getElementById('due-count');
   $newCount      = document.getElementById('new-count');
@@ -76,19 +81,17 @@ function bindEvents() {
   $less5.addEventListener('click', () => { limit = Math.max(5, limit - 5); saveLimit(); updateLessonUI(); updateDueUI(); renderGrid(); newQuestion(); });
   $all  .addEventListener('click', () => { limit = ITEMS.length; saveLimit(); updateLessonUI(); updateDueUI(); renderGrid(); newQuestion(); });
 
-  $celebrateAdd.addEventListener('click', () => {
-    limit = Math.min(ITEMS.length, limit + 5);
-    saveLimit();
-    stats = { correct: 0, total: 0, streak: 0 };
-    saveStats(stats);
-    updateStatsUI();
-    updateLessonUI();
-    updateDueUI();
-    hideCelebrate();
-    renderGrid();
-    newQuestion();
-  });
   $celebrateClose.addEventListener('click', hideCelebrate);
+
+  // Toast 50 — ask user
+  $toast50Yes.addEventListener('click', () => {
+    hideToast($toast50);
+    expandDeck();
+  });
+  $toast50No.addEventListener('click', () => hideToast($toast50));
+
+  // Toast 75 — already auto-expanded, just dismiss
+  $toast75Close.addEventListener('click', () => hideToast($toast75));
 
   document.addEventListener('keydown', (e) => {
     if (e.key === ' ') { e.preventDefault(); newQuestion(); return; }
@@ -205,7 +208,7 @@ function handleAnswer(btn, choice) {
 
   updateDueUI();
   renderGrid();
-  maybeCelebrate();
+  maybeMilestone();
 }
 
 function speakText(text) {
@@ -216,13 +219,64 @@ function speakText(text) {
 }
 function speak() { if (!current) return; speakText(current.answer); }
 
-// ---- Celebration ----
-function shouldCelebrate() {
-  return stats.streak >= 100 && stats.total > 0 && stats.correct === stats.total && !celebrated.includes(limit);
+// ---- Deck expansion (keeps streak) ----
+function expandDeck() {
+  if (limit >= ITEMS.length) return;
+  limit = Math.min(ITEMS.length, limit + 5);
+  saveLimit();
+  updateLessonUI();
+  updateDueUI();
+  renderGrid();
+  newQuestion();
 }
-function maybeCelebrate() { if (!shouldCelebrate()) return; celebrated.push(limit); saveCelebrated(); showCelebrate(); }
+
+// ---- Toast helpers ----
+let _toastTimer = null;
+function showToast(el, autoDismissMs) {
+  if (!el) return;
+  el.classList.add('show');
+  if (autoDismissMs) {
+    clearTimeout(_toastTimer);
+    _toastTimer = setTimeout(() => hideToast(el), autoDismissMs);
+  }
+}
+function hideToast(el) { if (el) el.classList.remove('show'); }
+
+// ---- Milestones ----
+// Track which milestones have fired per deck size
+function loadMilestones()  { try { return JSON.parse(localStorage.getItem('km_milestones') || '{}'); } catch { return {}; } }
+function saveMilestones(m) { try { localStorage.setItem('km_milestones', JSON.stringify(m)); } catch {} }
+let milestones = loadMilestones();
+
+function maybeMilestone() {
+  const s = stats.streak;
+  const key50 = `${limit}_50`, key75 = `${limit}_75`, key100 = `${limit}_100`;
+
+  // 100 streak — auto expand + celebrate
+  if (s >= 100 && !milestones[key100]) {
+    milestones[key100] = true; saveMilestones(milestones);
+    expandDeck();
+    showCelebrate();
+    return;
+  }
+  // 75 streak — auto expand + notify toast
+  if (s >= 75 && !milestones[key75] && !milestones[key100]) {
+    milestones[key75] = true; saveMilestones(milestones);
+    expandDeck();
+    showToast($toast75, 6000);
+    return;
+  }
+  // 50 streak — ask toast
+  if (s >= 50 && !milestones[key50] && !milestones[key75] && !milestones[key100]) {
+    milestones[key50] = true; saveMilestones(milestones);
+    showToast($toast50, 0); // no auto-dismiss — user must respond
+    return;
+  }
+}
+
+// ---- Celebration (100 streak modal) ----
 function showCelebrate() { $celebrate.classList.add('show'); }
-function hideCelebrate() { $celebrate.classList.remove('show'); }
+function hideCelebrate()  { $celebrate.classList.remove('show'); }
 
 // ---- Progress grid ----
 function renderGrid() {
