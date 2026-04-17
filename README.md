@@ -1,6 +1,6 @@
 # Kana Match 🎌
 
-![Version](https://img.shields.io/badge/version-v0.4.1-blue)
+![Version](https://img.shields.io/badge/version-v0.4.2-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
 A lightweight, offline-capable Japanese kana quiz app — no server, no dependencies, just open `index.html`.
@@ -31,11 +31,6 @@ All progress is saved locally in your browser via `localStorage` — no account 
 - 🌙 **Dark mode** — toggle with the ◑ button, respects system preference
 - 🎨 **Glassmorphism UI** — animated gradient background, frosted glass cards and buttons
 - 📱 **Mobile friendly** — responsive layout, works great on phone and tablet
-- ⌨️ **Keyboard shortcuts** (desktop):
-  - `1`–`4` → answer choices
-  - `Space` → next question
-  - `H` → switch to Hiragana
-  - `K` → switch to Katakana
 
 ---
 
@@ -82,7 +77,8 @@ All 46 base kana across 11 rows:
 ## Tech stack
 
 - **Pure HTML + CSS + Vanilla JS** — zero dependencies, zero build step
-- **localStorage** — persists stats, lesson size, reviewed progress
+- **SM-2 Spaced Repetition** — proven algorithm used by Anki, implemented from scratch
+- **localStorage** — persists all stats, SRS card data, theme and lesson progress
 - **Web Speech API** — browser-native Japanese TTS
 
 ---

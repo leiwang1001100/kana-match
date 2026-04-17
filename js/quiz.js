@@ -183,6 +183,9 @@ function newQuestion() {
 
   current = { answer: correctKana, romaji: ans.romaji, choices, item: ans };
 
+  // Disable Next until user answers
+  if ($next) $next.disabled = true;
+
   $prompt.textContent = ans.romaji;
   choices.forEach((ch, i) => {
     const btn = document.createElement('button');
@@ -217,6 +220,9 @@ function handleAnswer(btn, choice) {
   const card = getCard(srsCards, romaji);
   reviewCard(card, correct ? 1 : 0);
   saveSRSCards(srsCards);
+
+  // Re-enable Next after answering
+  if ($next) $next.disabled = false;
 
   updateDueUI();
   renderGrid();
