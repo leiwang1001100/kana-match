@@ -39,6 +39,7 @@ function applyTheme(dark) {
   const toggle = document.getElementById('themeToggle');
   if (toggle) {
     toggle.setAttribute('aria-checked', String(dark));
+    toggle.setAttribute('aria-pressed', String(dark));
   }
 }
 
