@@ -182,11 +182,3 @@ header {
 :root.dark .legend-box.srs-young    { background: #1e1b4b; }
 :root.dark .legend-box.srs-mature   { background: #052e16; }
 
-/* Theme toggle button */
-.theme-toggle {
-  background: transparent; border: 1px solid var(--border);
-  border-radius: 10px; padding: 8px 10px;
-  cursor: pointer; font-size: 16px; color: var(--ink);
-  transition: background 0.2s;
-}
-.theme-toggle:hover { background: var(--card); }

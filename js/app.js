@@ -40,6 +40,7 @@ function applyTheme(dark) {
   if (toggle) {
     toggle.title = dark ? 'Switch to light mode' : 'Switch to dark mode';
     toggle.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+    toggle.setAttribute('aria-pressed', String(dark));
   }
 }
 
