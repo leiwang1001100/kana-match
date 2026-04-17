@@ -25,11 +25,16 @@ function today() {
   return `${yyyy}-${mm}-${dd}`;
 }
 
-// Returns a date string N days from today
+// Returns a date string N days from a given YYYY-MM-DD string
+// Parses and writes using local calendar math to avoid UTC timezone drift
 function addDays(dateStr, n) {
-  const d = new Date(dateStr);
+  const [yyyy, mm, dd] = dateStr.split('-').map(Number);
+  const d = new Date(yyyy, mm - 1, dd); // local date constructor (no UTC shift)
   d.setDate(d.getDate() + n);
-  return d.toISOString().slice(0, 10);
+  const y2 = d.getFullYear();
+  const m2 = String(d.getMonth() + 1).padStart(2, '0');
+  const d2 = String(d.getDate()).padStart(2, '0');
+  return `${y2}-${m2}-${d2}`;
 }
 
 // Load all SRS card data from localStorage
