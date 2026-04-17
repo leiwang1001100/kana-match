@@ -103,9 +103,10 @@ function runSelfTests() {
   group('SRS — pickNextCard prefers due cards', () => {
     const deck = ITEMS.slice(0, 5);
     const cards = {};
-    // Make first card due yesterday
-    const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
-    cards[deck[0].romaji] = { romaji: deck[0].romaji, interval: 1, easeFactor: 2.5, dueDate: yesterday.toISOString().slice(0,10), lapses: 0 };
+    // Make first card due yesterday — use local date to avoid UTC drift
+    const y = new Date(); y.setDate(y.getDate() - 1);
+    const yStr = `${y.getFullYear()}-${String(y.getMonth()+1).padStart(2,'0')}-${String(y.getDate()).padStart(2,'0')}`;
+    cards[deck[0].romaji] = { romaji: deck[0].romaji, interval: 1, easeFactor: 2.5, dueDate: yStr, lapses: 0 };
     const picked = pickNextCard(cards, deck);
     assert(picked.romaji === deck[0].romaji, `should pick due card, got ${picked.romaji}`);
   });
@@ -147,7 +148,7 @@ function runSelfTests() {
     const deck = ITEMS.slice(0, 3);
     const cards = {};
     const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
-    const tomorrowStr = tomorrow.toISOString().slice(0,10);
+    const tomorrowStr = `${tomorrow.getFullYear()}-${String(tomorrow.getMonth()+1).padStart(2,'0')}-${String(tomorrow.getDate()).padStart(2,'0')}`;
     // All cards are future (due tomorrow)
     deck.forEach(it => {
       cards[it.romaji] = { romaji: it.romaji, interval: 1, easeFactor: 2.5, dueDate: tomorrowStr, lapses: 0 };

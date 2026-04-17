@@ -196,7 +196,6 @@ header {
 .toolbar { display:flex; justify-content:center; gap:10px; margin-top:16px; }
 .toolbar .btn.primary { min-width:160px; }
 
-
 /* Icon-only button — glassmorphism */
 .btn-icon {
   width: 42px; height: 42px;
@@ -272,6 +271,7 @@ header {
   color: var(--ink); cursor: pointer; font-weight: 600;
 }
 .btn-sm.primary { background: linear-gradient(135deg,#6366f1,#a855f7); color:#fff; border-color:transparent; }
+.btn-sm:disabled { opacity:0.35; cursor:not-allowed; }
 
 /* ---- Arc card (liquid glass with partial arc) ---- */
 .arc-card {
@@ -298,12 +298,12 @@ header {
 .arc-track {
   fill:none; stroke:rgba(0,0,0,0.08); stroke-width:7;
   stroke-linecap:round;
-  stroke-dasharray:141 188;
+  stroke-dasharray:141 188.5; /* 270° of circumference, matches ARC_TRACK_LEN/ARC_CIRCUMF */
 }
 :root.dark .arc-track { stroke:rgba(255,255,255,0.1); }
 .arc-fill {
   fill:none; stroke-width:7; stroke-linecap:round;
-  stroke-dasharray:0 157;
+  stroke-dasharray:0 188.5; /* matches ARC_CIRCUMF in quiz.js */
   transition:stroke-dasharray 0.7s cubic-bezier(0.4,0,0.2,1);
 }
 .arc-fill--purple { stroke:#818cf8; }
@@ -460,7 +460,6 @@ header {
 :root.dark .kana-cell { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.1); }
 
 /* SRS levels */
-.kana-cell.srs-new      { }
 .kana-cell.srs-learning { outline:2px solid var(--warn); background:rgba(245,158,11,0.12); }
 .kana-cell.srs-young    { outline:2px solid var(--brand); background:rgba(99,102,241,0.12); }
 .kana-cell.srs-mature   { outline:2px solid var(--ok); background:rgba(16,185,129,0.12); }
