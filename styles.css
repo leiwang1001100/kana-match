@@ -186,8 +186,8 @@ header {
 .theme-switch {
   display: flex; align-items: center;
   padding: 4px 8px; cursor: pointer;
+  border: 0; background: transparent;
 }
-.theme-switch input { display: none; }
 .theme-switch-track {
   position: relative;
   width: 44px; height: 24px;
@@ -196,7 +196,7 @@ header {
   transition: background 0.25s;
   display: flex; align-items: center;
 }
-.theme-switch input:checked ~ .theme-switch-track {
+.theme-switch[aria-checked="true"] .theme-switch-track {
   background: var(--brand);
 }
 .theme-switch-thumb {
@@ -206,11 +206,11 @@ header {
   background: #fff;
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  font-size: 11px;
+  font-size: 13px;
   box-shadow: 0 1px 4px rgba(0,0,0,.2);
   transition: left 0.25s;
 }
-.theme-switch input:checked ~ .theme-switch-track .theme-switch-thumb {
+.theme-switch[aria-checked="true"] .theme-switch-thumb {
   left: 22px;
 }
 

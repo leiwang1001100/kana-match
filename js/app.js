@@ -21,8 +21,8 @@ function initTheme() {
   const isDark = saved ? saved === 'dark' : prefersDark;
   applyTheme(isDark);
 
-  toggle.addEventListener('change', () => {
-    const nowDark = toggle.checked;
+  toggle.addEventListener('click', () => {
+    const nowDark = toggle.getAttribute('aria-checked') !== 'true';
     applyTheme(nowDark);
     localStorage.setItem('km_theme', nowDark ? 'dark' : 'light');
   });
@@ -38,11 +38,7 @@ function applyTheme(dark) {
   document.documentElement.classList.toggle('dark', dark);
   const toggle = document.getElementById('themeToggle');
   if (toggle) {
-    toggle.checked = dark;
     toggle.setAttribute('aria-checked', String(dark));
-    // Update emoji: ☀️ for light, 🌙 for dark
-    const thumb = toggle.parentElement && toggle.parentElement.querySelector('.theme-switch-thumb');
-    if (thumb) thumb.textContent = dark ? '🌙' : '☀️';
   }
 }
 
