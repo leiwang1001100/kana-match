@@ -180,6 +180,10 @@ header {
   box-shadow: 0 4px 14px rgba(0,0,0,0.1);
 }
 .btn:active { transform: scale(0.97); }
+.btn:disabled {
+  opacity: 0.35; cursor: not-allowed;
+  transform: none !important; box-shadow: none !important;
+}
 .btn.primary {
   background: linear-gradient(135deg, #6366f1, #a855f7);
   color: #fff; border-color: transparent;

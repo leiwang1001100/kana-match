@@ -141,6 +141,11 @@ function updateLessonUI() {
   const lessonArc = document.getElementById('lesson-arc');
   if (lessonVal) lessonVal.innerHTML = `${limit}<span class="arc-sub">/${ITEMS.length}</span>`;
   setArc(lessonArc, Math.round((limit / ITEMS.length) * 100));
+
+  // Disable controls contextually
+  if ($less5) $less5.disabled = limit <= 5;
+  if ($more5) $more5.disabled = limit >= ITEMS.length;
+  if ($all)   $all.disabled   = limit >= ITEMS.length;
 }
 
 function updateDueUI() {
