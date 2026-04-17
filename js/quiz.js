@@ -107,9 +107,24 @@ function bindEvents() {
 
   $speak.addEventListener('click', speak);
 
-  $more5.addEventListener('click', () => { limit = Math.min(ITEMS.length, limit + 5); saveLimit(); updateLessonUI(); updateDueUI(); renderGrid(); });
-  $less5.addEventListener('click', () => { limit = Math.max(5, limit - 5); saveLimit(); updateLessonUI(); updateDueUI(); renderGrid(); });
-  $all  .addEventListener('click', () => { limit = ITEMS.length; saveLimit(); updateLessonUI(); updateDueUI(); renderGrid(); });
+  $more5.addEventListener('click', () => {
+    limit = Math.min(ITEMS.length, limit + 5);
+    saveLimit(); updateLessonUI(); updateDueUI(); renderGrid();
+    // Expanding: current question stays valid, no refresh needed
+  });
+  $less5.addEventListener('click', () => {
+    limit = Math.max(5, limit - 5);
+    saveLimit(); updateLessonUI(); updateDueUI(); renderGrid();
+    // Shrinking: refresh if current card is now outside the new deck
+    if (lastAnswer && !ITEMS.slice(0, limit).some(it => it.romaji === lastAnswer.romaji)) {
+      newQuestion();
+    }
+  });
+  $all.addEventListener('click', () => {
+    limit = ITEMS.length;
+    saveLimit(); updateLessonUI(); updateDueUI(); renderGrid();
+    // Expanding to all: current question stays valid
+  });
 
   $celebrateClose.addEventListener('click', hideCelebrate);
 
