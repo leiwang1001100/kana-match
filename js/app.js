@@ -6,10 +6,43 @@
 // Wires everything together and runs self-tests on load.
 
 document.addEventListener('DOMContentLoaded', () => {
+  initTheme();
   bindEvents();
   init();
   runSelfTests();
 });
+
+// ============================
+// DARK THEME (mirrors epub app)
+// ============================
+function initTheme() {
+  const toggle = document.getElementById('themeToggle');
+  const saved = localStorage.getItem('km_theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const isDark = saved ? saved === 'dark' : prefersDark;
+  applyTheme(isDark);
+
+  toggle.onclick = () => {
+    const nowDark = !document.documentElement.classList.contains('dark');
+    applyTheme(nowDark);
+    localStorage.setItem('km_theme', nowDark ? 'dark' : 'light');
+  };
+
+  // Listen for system theme changes (with Safari < 14 fallback)
+  const mq = window.matchMedia('(prefers-color-scheme: dark)');
+  const mqHandler = e => { if (!localStorage.getItem('km_theme')) applyTheme(e.matches); };
+  try { mq.addEventListener('change', mqHandler); }
+  catch { try { mq.addListener(mqHandler); } catch {} }
+}
+
+function applyTheme(dark) {
+  document.documentElement.classList.toggle('dark', dark);
+  const toggle = document.getElementById('themeToggle');
+  if (toggle) {
+    toggle.title = dark ? 'Switch to light mode' : 'Switch to dark mode';
+    toggle.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+  }
+}
 
 // ============================
 // SELF-TESTS (console only)
