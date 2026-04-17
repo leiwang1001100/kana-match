@@ -300,7 +300,8 @@ function renderGrid() {
     const cell = document.createElement('div');
     cell.className = `kana-cell srs-${level}${inDeck ? '' : ' not-in-deck'}`;
     cell.textContent = ch;
-    cell.title = `${it.romaji} — ${level}${card && card.dueDate ? ' (due: ' + card.dueDate + ')' : ''}`;
+    const safeDate = card && card.dueDate && /^\d{4}-\d{2}-\d{2}$/.test(card.dueDate) ? card.dueDate : '';
+    cell.title = `${it.romaji} — ${level}${safeDate ? ' (due: ' + safeDate + ')' : ''}`;
     $grid.appendChild(cell);
   }
 }
