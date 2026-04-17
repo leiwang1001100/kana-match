@@ -6,12 +6,12 @@
 
 // ---- localStorage key constants ----
 const KEYS = {
-  script:     'km_script',
-  stats:      'km_stats',
-  limit:      'km_limit',
-  srs:        'km_srs_cards',
-  theme:      'km_theme',
-  milestones: 'km_milestones'
+  script: 'km_script',
+  stats:  'km_stats',
+  limit:  'km_limit',
+  srs:    'km_srs_cards',
+  theme:  'km_theme'
+  // milestones key is owned by milestones.js (MILESTONE_KEY)
 };
 
 // ---- Persisted state ----
@@ -77,13 +77,11 @@ function bindEvents() {
     stats = { correct: 0, total: 0, streak: 0 };
     saveStats(stats);
     srsCards = resetSRSCards();
-    milestones = {};
-    saveMilestones(milestones);
     limit = 5;
     saveLimit();
     current = null;
     lastAnswer = null;
-    // Clear all milestone UI and pending timers
+    // Clear all milestone UI, timers and state (milestones.js)
     resetMilestones();
     hideCelebrate();
     updateStatsUI();
