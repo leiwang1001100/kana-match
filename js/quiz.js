@@ -21,11 +21,15 @@ let limit    = loadLimit();
 let srsCards = loadSRSCards();
 
 /** @type {{answer:string, romaji:string, choices:string[], item:object} | null} */
-let current = null;
+let current     = null;
+let lastAnswer  = null; // persists after current is nulled, for Play button
 
 // ---- Timers ----
 let _toastTimer  = null;
 let _expandTimer = null;
+
+// ---- Milestones ----
+let milestones = loadMilestones();
 
 // ---- DOM refs (populated in init, after DOM is ready) ----
 let $tabH, $tabK, $prompt, $choices, $next, $speak;
@@ -102,9 +106,9 @@ function bindEvents() {
 
   $speak.addEventListener('click', speak);
 
-  $more5.addEventListener('click', () => { limit = Math.min(ITEMS.length, limit + 5); saveLimit(); updateLessonUI(); updateDueUI(); renderGrid(); newQuestion(); });
-  $less5.addEventListener('click', () => { limit = Math.max(5, limit - 5); saveLimit(); updateLessonUI(); updateDueUI(); renderGrid(); newQuestion(); });
-  $all  .addEventListener('click', () => { limit = ITEMS.length; saveLimit(); updateLessonUI(); updateDueUI(); renderGrid(); newQuestion(); });
+  $more5.addEventListener('click', () => { limit = Math.min(ITEMS.length, limit + 5); saveLimit(); updateLessonUI(); updateDueUI(); renderGrid(); });
+  $less5.addEventListener('click', () => { limit = Math.max(5, limit - 5); saveLimit(); updateLessonUI(); updateDueUI(); renderGrid(); });
+  $all  .addEventListener('click', () => { limit = ITEMS.length; saveLimit(); updateLessonUI(); updateDueUI(); renderGrid(); });
 
   $celebrateClose.addEventListener('click', hideCelebrate);
 
@@ -126,11 +130,9 @@ function updateSeg() {
   $tabK.setAttribute('aria-pressed', String(script === 'katakana'));
 }
 
-// Arc circumference for r=30: 2πr ≈ 188.5
-// We show a 270° partial arc = 75% of circumference
-const ARC_R           = 30;
-const ARC_CIRCUMF     = Math.round(2 * Math.PI * ARC_R * 10) / 10; // 188.5
-const ARC_TRACK_LEN   = Math.round(ARC_CIRCUMF * 0.75);             // 141 (270°)
+// Arc circumference for r=30: 2πr ≈ 188.5, showing 270° = 75% of arc
+const ARC_CIRCUMF   = Math.round(2 * Math.PI * 30 * 10) / 10; // 188.5
+const ARC_TRACK_LEN = Math.round(ARC_CIRCUMF * 0.75);          // 141
 
 function setArc(arcEl, pct) {
   if (!arcEl) return;
@@ -194,6 +196,7 @@ function newQuestion() {
   const choices = shuffle([correctKana, ...wrong]);
 
   current = { answer: correctKana, romaji: ans.romaji, choices, item: ans };
+  lastAnswer = current;
 
   // Disable Next until user answers
   if ($next) $next.disabled = true;
@@ -248,7 +251,7 @@ function speakText(text) {
   speechSynthesis.cancel();
   speechSynthesis.speak(u);
 }
-function speak() { if (!current) return; speakText(current.answer); }
+function speak() { if (!lastAnswer) return; speakText(lastAnswer.answer); }
 
 // ---- Deck expansion (keeps streak) ----
 // Delay newQuestion so user sees the answer feedback first
@@ -277,7 +280,6 @@ function hideToast(el) { if (el) el.classList.remove('show'); }
 // Track which milestones have fired per deck size
 function loadMilestones()  { try { return JSON.parse(localStorage.getItem(KEYS.milestones) || '{}'); } catch { return {}; } }
 function saveMilestones(m) { try { localStorage.setItem(KEYS.milestones, JSON.stringify(m)); } catch {} }
-let milestones = loadMilestones();
 
 function maybeMilestone() {
   const s = stats.streak;
