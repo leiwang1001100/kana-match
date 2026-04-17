@@ -120,5 +120,35 @@ function runSelfTests() {
     assert(pure(st1, 5, [5]) === false, 'should not repeat same limit');
   });
 
+  group('milestone cascade — 50/75/100 fire in correct windows', () => {
+    const check = (streak, ms, lim) => {
+      const key50 = `${lim}_50`, key75 = `${lim}_75`, key100 = `${lim}_100`;
+      if (streak >= 50 && streak < 75 && !ms[key50])  return 50;
+      if (streak >= 75 && streak < 100 && !ms[key75]) return 75;
+      if (streak >= 100 && !ms[key100])               return 100;
+      return null;
+    };
+    assert(check(50,  {}, 5) === 50,  '50 streak should fire 50 milestone');
+    assert(check(74,  {}, 5) === 50,  '74 streak should still fire 50 milestone');
+    assert(check(75,  {}, 5) === 75,  '75 streak should fire 75 milestone');
+    assert(check(99,  {}, 5) === 75,  '99 streak should still fire 75 milestone');
+    assert(check(100, {}, 5) === 100, '100 streak should fire 100 milestone');
+    assert(check(50,  {'5_50': true}, 5) === null, 'already-fired 50 should not repeat');
+    assert(check(75,  {'5_75': true}, 5) === null, 'already-fired 75 should not repeat');
+  });
+
+  group('SRS — pickNextCard falls back to future cards when none due', () => {
+    const deck = ITEMS.slice(0, 3);
+    const cards = {};
+    const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
+    const tomorrowStr = tomorrow.toISOString().slice(0,10);
+    // All cards are future (due tomorrow)
+    deck.forEach(it => {
+      cards[it.romaji] = { romaji: it.romaji, interval: 1, easeFactor: 2.5, dueDate: tomorrowStr, lapses: 0 };
+    });
+    const picked = pickNextCard(cards, deck);
+    assert(deck.some(it => it.romaji === picked.romaji), 'should pick a card from the deck');
+  });
+
   console.info('%cSelf-tests complete.', 'color:#16a34a;font-weight:600');
 }
