@@ -196,6 +196,7 @@ header {
 .toolbar { display:flex; justify-content:center; gap:10px; margin-top:16px; }
 .toolbar .btn.primary { min-width:160px; }
 
+
 /* Icon-only button — glassmorphism */
 .btn-icon {
   width: 42px; height: 42px;
@@ -271,14 +272,6 @@ header {
   color: var(--ink); cursor: pointer; font-weight: 600;
 }
 .btn-sm.primary { background: linear-gradient(135deg,#6366f1,#a855f7); color:#fff; border-color:transparent; }
-
-/* Desktop-only tips */
-.tips-desktop {
-  text-align: center; margin: 14px 0 0; font-size: 13px;
-}
-@media (max-width: 600px) {
-  .tips-desktop { display: none; }
-}
 
 /* ---- Arc card (liquid glass with partial arc) ---- */
 .arc-card {
@@ -422,7 +415,6 @@ header {
 /* ---- Toolbar ---- */
 .toolbar { display: flex; justify-content: center; gap: 10px; margin-top: 16px; }
 
-/* ---- Pill (legacy, kept for compatibility) ---- */
 /* ---- Modal ---- */
 .modal {
   position: fixed; inset: 0;
@@ -473,9 +465,6 @@ header {
 .kana-cell.srs-young    { outline:2px solid var(--brand); background:rgba(99,102,241,0.12); }
 .kana-cell.srs-mature   { outline:2px solid var(--ok); background:rgba(16,185,129,0.12); }
 .kana-cell.not-in-deck  { opacity:0.3; }
-
-/* SRS badge */
-.kana-cell .srs-badge { position:absolute; bottom:2px; right:4px; font-size:9px; font-weight:700; opacity:0.7; }
 
 /* Legend */
 .legend { font-size:12px; margin-top:10px; display:flex; flex-wrap:wrap; gap:10px; color:var(--muted); }

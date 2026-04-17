@@ -113,9 +113,7 @@ function bindEvents() {
 // ---- UI helpers ----
 function updateSeg() {
   $tabH.setAttribute('aria-pressed', String(script === 'hiragana'));
-  $tabH.setAttribute('aria-selected', String(script === 'hiragana'));
   $tabK.setAttribute('aria-pressed', String(script === 'katakana'));
-  $tabK.setAttribute('aria-selected', String(script === 'katakana'));
 }
 
 // Arc circumference for r=30: 2πr ≈ 188.5

@@ -13,13 +13,13 @@
         <div class="logo" aria-hidden>あ</div>
         <div>
           <div style="font-weight:800">Kana Match — Romaji → Kana</div>
-          <div class="muted" style="font-size:12px">Show a random romaji. Pick the matching kana. &nbsp;<span style="font-size:11px;opacity:.5">v0.4.1</span></div>
+          <div class="muted" style="font-size:12px">Show a random romaji. Pick the matching kana. &nbsp;<span style="font-size:11px;opacity:.5">v0.4.2</span></div>
         </div>
       </div>
       <div class="row">
-        <div class="seg" role="tablist" aria-label="Answer script">
-          <button id="tab-hira" role="tab" aria-selected="true"  aria-pressed="true">Hiragana</button>
-          <button id="tab-kata" role="tab" aria-selected="false" aria-pressed="false">Katakana</button>
+        <div class="seg" role="group" aria-label="Answer script">
+          <button id="tab-hira" aria-pressed="true">Hiragana</button>
+          <button id="tab-kata" aria-pressed="false">Katakana</button>
         </div>
         <button id="themeToggle" class="theme-switch" role="switch" aria-checked="false" title="Toggle dark mode" aria-label="Toggle dark mode">
           <span class="theme-switch-track"><span class="theme-switch-thumb">◑</span></span>
@@ -27,7 +27,7 @@
       </div>
     </header>
 
-    <main class="card pad" aria-live="polite">
+    <main class="card pad">
 
       <!-- Row 1: Stat cards -->
       <div class="stats-row">
@@ -99,13 +99,12 @@
         </div>
       </div>
 
-      <div class="prompt" id="prompt" aria-label="Romaji prompt">—</div>
+      <div class="prompt" id="prompt" aria-label="Romaji prompt" aria-live="polite">—</div>
       <div class="choices" id="choices" aria-label="Kana choices"></div>
 
       <div class="toolbar">
         <button class="btn primary" id="next">Next</button>
       </div>
-
 
       <!-- SRS Progress grid -->
       <section id="review-section" class="pad" aria-labelledby="review-title">
