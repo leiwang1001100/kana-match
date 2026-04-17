@@ -123,20 +123,24 @@ function runSelfTests() {
   });
 
   group('milestone cascade — 50/75/100 fire in correct windows', () => {
+    const MAX = ITEMS.length;
     const check = (streak, ms, lim) => {
       const key50 = `${lim}_50`, key75 = `${lim}_75`, key100 = `${lim}_100`;
-      if (streak >= 50 && streak < 75 && !ms[key50])  return 50;
-      if (streak >= 75 && streak < 100 && !ms[key75]) return 75;
-      if (streak >= 100 && !ms[key100])               return 100;
+      const atMax = lim >= MAX;
+      if (streak >= 50 && streak < 75 && !ms[key50])  return atMax ? null : 50;
+      if (streak >= 75 && streak < 100 && !ms[key75]) return atMax ? null : 75;
+      if (streak >= 100 && !ms[key100])               return atMax ? null : 100;
       return null;
     };
-    assert(check(50,  {}, 5) === 50,  '50 streak should fire 50 milestone');
-    assert(check(74,  {}, 5) === 50,  '74 streak should still fire 50 milestone');
-    assert(check(75,  {}, 5) === 75,  '75 streak should fire 75 milestone');
-    assert(check(99,  {}, 5) === 75,  '99 streak should still fire 75 milestone');
-    assert(check(100, {}, 5) === 100, '100 streak should fire 100 milestone');
+    assert(check(50,  {}, 5) === 50,   '50 streak should fire 50 milestone');
+    assert(check(74,  {}, 5) === 50,   '74 streak should still fire 50 milestone');
+    assert(check(75,  {}, 5) === 75,   '75 streak should fire 75 milestone');
+    assert(check(99,  {}, 5) === 75,   '99 streak should still fire 75 milestone');
+    assert(check(100, {}, 5) === 100,  '100 streak should fire 100 milestone');
     assert(check(50,  {'5_50': true}, 5) === null, 'already-fired 50 should not repeat');
     assert(check(75,  {'5_75': true}, 5) === null, 'already-fired 75 should not repeat');
+    assert(check(100, {}, MAX) === null, 'should not fire at max deck size');
+    assert(check(50,  {}, MAX) === null, 'should not fire 50 at max deck size');
   });
 
   group('SRS — pickNextCard falls back to future cards when none due', () => {

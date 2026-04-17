@@ -164,6 +164,8 @@ function updateDueUI() {
 
 // ---- Core quiz logic ----
 function newQuestion() {
+  // Cancel any pending expandDeck auto-advance
+  if (_expandTimer) { clearTimeout(_expandTimer); _expandTimer = null; }
   $choices.innerHTML = '';
   const deck = ITEMS.slice(0, limit);
 
@@ -240,6 +242,7 @@ function speak() { if (!current) return; speakText(current.answer); }
 
 // ---- Deck expansion (keeps streak) ----
 // Delay newQuestion so user sees the answer feedback first
+let _expandTimer = null;
 function expandDeck() {
   if (limit >= ITEMS.length) return;
   limit = Math.min(ITEMS.length, limit + 5);
@@ -247,7 +250,7 @@ function expandDeck() {
   updateLessonUI();
   updateDueUI();
   renderGrid();
-  setTimeout(() => newQuestion(), 800);
+  _expandTimer = setTimeout(() => { _expandTimer = null; newQuestion(); }, 800);
 }
 
 // ---- Toast helpers ----
@@ -271,26 +274,24 @@ let milestones = loadMilestones();
 function maybeMilestone() {
   const s = stats.streak;
   const key50 = `${limit}_50`, key75 = `${limit}_75`, key100 = `${limit}_100`;
+  const atMax = limit >= ITEMS.length;
 
-  // Check in ascending order so lower milestones can fire first
-  // 50 streak — ask toast (only if 75/100 haven't fired yet)
+  // 50 streak — ask toast (only if room to expand)
   if (s >= 50 && s < 75 && !milestones[key50]) {
     milestones[key50] = true; saveMilestones(milestones);
-    showToast($toast50, 0); // no auto-dismiss — user must respond
+    if (!atMax) showToast($toast50, 0);
     return;
   }
-  // 75 streak — auto expand + notify toast (only if 100 hasn't fired yet)
+  // 75 streak — auto expand + notify (only if room to expand)
   if (s >= 75 && s < 100 && !milestones[key75]) {
     milestones[key75] = true; saveMilestones(milestones);
-    expandDeck();
-    showToast($toast75, 6000);
+    if (!atMax) { expandDeck(); showToast($toast75, 6000); }
     return;
   }
-  // 100 streak — auto expand + celebrate
+  // 100 streak — auto expand + celebrate (only if room to expand)
   if (s >= 100 && !milestones[key100]) {
     milestones[key100] = true; saveMilestones(milestones);
-    expandDeck();
-    showCelebrate();
+    if (!atMax) { expandDeck(); showCelebrate(); }
     return;
   }
 }
