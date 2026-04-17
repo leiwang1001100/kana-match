@@ -80,17 +80,6 @@ All 46 base kana across 11 rows:
 
 ---
 
-## Roadmap
-
-- [ ] Dakuten & handakuten kana (が、ざ、ば、ぱ…)
-- [ ] Compound kana / youon (きゃ、しゅ、ちょ…)
-- [ ] Reverse mode: Kana → Romaji
-- [ ] Typing mode
-- [ ] Vocabulary module
-- [ ] Dark mode
-
----
-
 ## Releases & Changelog
 
 See the [Releases page](https://github.com/leiwang1001100/kana-match/releases) for full release notes and changelogs.
