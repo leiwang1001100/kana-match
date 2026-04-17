@@ -7,8 +7,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
-  bindEvents();
-  init();
+  init();       // bindEvents() is called inside init() after DOM refs are resolved
   runSelfTests();
 });
 

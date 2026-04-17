@@ -46,6 +46,7 @@ function init() {
   $dueCount      = document.getElementById('due-count');
   $newCount      = document.getElementById('new-count');
 
+  bindEvents();
   updateSeg();
   updateStatsUI();
   updateLessonUI();
