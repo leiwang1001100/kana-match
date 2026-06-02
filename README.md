@@ -80,6 +80,7 @@ All 46 base kana across 11 rows:
 - **SM-2 Spaced Repetition** — proven algorithm used by Anki, implemented from scratch
 - **localStorage** — persists all stats, SRS card data, theme and lesson progress
 - **Web Speech API** — browser-native Japanese TTS
+- **[Claude](https://claude.ai)** (Anthropic) — AI-assisted development
 
 ---
 
