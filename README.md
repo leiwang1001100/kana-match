@@ -1,6 +1,6 @@
 # Kana Match 🎌
 
-![Version](https://img.shields.io/badge/version-v0.6.1-blue)
+![Version](https://img.shields.io/badge/version-v0.7.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Built with Claude](https://img.shields.io/badge/built%20with-Claude%20AI-orange)
 

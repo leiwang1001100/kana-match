@@ -100,14 +100,15 @@ function runSelfTests() {
     assert(srsLevel({ dueDate: '2026-01-01', interval: 21 }) === 'mature', 'interval 21 should be mature');
   });
 
-  group('SRS — pickNextCard prefers due cards', () => {
+  group('SRS — pickNextCard prefers due cards (with keyFn)', () => {
     const deck = ITEMS.slice(0, 5);
     const cards = {};
     // Make first card due yesterday — use local date to avoid UTC drift
     const y = new Date(); y.setDate(y.getDate() - 1);
     const yStr = `${y.getFullYear()}-${String(y.getMonth()+1).padStart(2,'0')}-${String(y.getDate()).padStart(2,'0')}`;
-    cards[deck[0].romaji] = { romaji: deck[0].romaji, interval: 1, easeFactor: 2.5, dueDate: yStr, lapses: 0 };
-    const picked = pickNextCard(cards, deck);
+    const keyFn = r => `${r}_hira`;
+    cards[keyFn(deck[0].romaji)] = { romaji: keyFn(deck[0].romaji), interval: 1, easeFactor: 2.5, dueDate: yStr, lapses: 0 };
+    const picked = pickNextCard(cards, deck, keyFn);
     assert(picked.romaji === deck[0].romaji, `should pick due card, got ${picked.romaji}`);
   });
 
@@ -144,17 +145,20 @@ function runSelfTests() {
     assert(check(50,  {}, MAX) === null, 'should not fire 50 at max deck size');
   });
 
-  group('SRS — pickNextCard falls back to future cards when none due', () => {
-    const deck = ITEMS.slice(0, 3);
+  group('SRS — pickNextCard picks randomly from future cards when none due', () => {
+    const deck = ITEMS.slice(0, 5);
     const cards = {};
+    const keyFn = r => `${r}_hira`;
     const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
     const tomorrowStr = `${tomorrow.getFullYear()}-${String(tomorrow.getMonth()+1).padStart(2,'0')}-${String(tomorrow.getDate()).padStart(2,'0')}`;
     // All cards are future (due tomorrow)
     deck.forEach(it => {
-      cards[it.romaji] = { romaji: it.romaji, interval: 1, easeFactor: 2.5, dueDate: tomorrowStr, lapses: 0 };
+      cards[keyFn(it.romaji)] = { romaji: keyFn(it.romaji), interval: 1, easeFactor: 2.5, dueDate: tomorrowStr, lapses: 0 };
     });
-    const picked = pickNextCard(cards, deck);
-    assert(deck.some(it => it.romaji === picked.romaji), 'should pick a card from the deck');
+    // Run 10 times — should not always return the same card
+    const picked = new Set();
+    for (let i = 0; i < 10; i++) picked.add(pickNextCard(cards, deck, keyFn).romaji);
+    assert(picked.size > 1, `should pick different cards randomly, got only: ${[...picked].join(',')}`);
   });
 
   group('SRS — easeFactor capped at MAX_EASE', () => {

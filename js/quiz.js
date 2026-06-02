@@ -16,6 +16,12 @@ const KEYS = {
 
 // ---- Persisted state ----
 let script   = localStorage.getItem(KEYS.script) || 'hiragana';
+
+// ---- SRS key helper ----
+// Each script has independent SRS progress
+function srsKey(romaji) {
+  return `${romaji}_${script === 'hiragana' ? 'hira' : 'kata'}`;
+}
 let stats    = loadStats();
 let limit    = loadLimit();
 let srsCards = loadSRSCards();
@@ -159,8 +165,8 @@ function updateLessonUI() {
 
 function updateDueUI() {
   const deck = ITEMS.slice(0, limit);
-  const due  = countDue(srsCards, deck);
-  const nw   = countNew(srsCards, deck);
+  const due  = countDue(srsCards, deck, srsKey);
+  const nw   = countNew(srsCards, deck, srsKey);
   if ($dueCount) $dueCount.textContent = String(due);
   if ($newCount) $newCount.textContent = String(nw);
   if ($due) $due.className = 'stat-chip stat-chip--blue' + (due > 0 ? ' stat-chip--urgent' : '');
@@ -174,8 +180,8 @@ function newQuestion() {
   const deck = ITEMS.slice(0, limit);
   if (!deck.length) return; // safety guard — should never happen with limit >= 5
 
-  // SRS: pick the best next card
-  const ans = pickNextCard(srsCards, deck);
+  // SRS: pick the best next card (script-aware)
+  const ans = pickNextCard(srsCards, deck, srsKey);
   const correctKana = script === 'hiragana' ? ans.hira : ans.kata;
 
   // Build wrong choices from rest of deck
@@ -224,8 +230,8 @@ function handleAnswer(btn, choice) {
   saveStats(stats);
   updateStatsUI();
 
-  // Update SRS card
-  const card = getCard(srsCards, romaji);
+  // Update SRS card (script-aware key)
+  const card = getCard(srsCards, srsKey(romaji));
   reviewCard(card, correct ? 1 : 0);
   saveSRSCards(srsCards);
 
@@ -273,7 +279,7 @@ function renderGrid() {
     const cell  = cells[i];
     if (!cell) return;
     const ch     = script === 'hiragana' ? it.hira : it.kata;
-    const card   = srsCards[it.romaji];
+    const card   = srsCards[srsKey(it.romaji)]; // script-aware key
     const level  = srsLevel(card);
     const inDeck = deck.has(it.romaji);
     const safeDate = card && card.dueDate && /^\d{4}-\d{2}-\d{2}$/.test(card.dueDate) ? card.dueDate : '';
