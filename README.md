@@ -2,6 +2,7 @@
 
 ![Version](https://img.shields.io/badge/version-v0.6.1-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
+![Built with Claude](https://img.shields.io/badge/built%20with-Claude%20AI-orange)
 
 A lightweight, offline-capable Japanese kana quiz app — no server, no dependencies, just open `index.html`.
 
